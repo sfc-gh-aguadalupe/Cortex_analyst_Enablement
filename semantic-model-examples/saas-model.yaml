@@ -1,0 +1,489 @@
+# SaaS Business Analytics Semantic Model
+# Subscription business analytics with user behavior and revenue metrics
+# Includes users, subscriptions, usage events, and customer success
+
+name: saas_analytics
+description: "Comprehensive SaaS business analytics model covering subscription management, user engagement, feature adoption, customer success, and revenue optimization"
+
+# SaaS business metrics and subscription economy rules
+custom_instructions: |
+  SaaS Business Metrics and Subscription Economy Rules:
+  
+  ## Revenue Recognition and Metrics
+  - Monthly Recurring Revenue (MRR) = sum of normalized monthly subscription values
+  - Annual Recurring Revenue (ARR) = MRR × 12
+  - Average Revenue Per User (ARPU) = total revenue / active subscribers
+  - Customer Lifetime Value (CLV) = average monthly revenue × gross margin / churn rate
+  - Revenue recognition follows subscription accounting standards
+  
+  ## Churn and Retention Analysis
+  - Churn rate = customers who cancelled / total customers at start of period
+  - Revenue churn includes both cancellations and downgrades
+  - Net Revenue Retention = (starting MRR + expansion - churn) / starting MRR
+  - Cohort analysis tracks customer behavior over time
+  - Voluntary vs involuntary churn tracked separately
+  
+  ## User Engagement and Product Metrics
+  - Daily Active Users (DAU) and Monthly Active Users (MAU)
+  - Feature adoption = users who used feature / total active users
+  - User onboarding completion rates by step
+  - Time to value = days from signup to first key action
+  - Product-qualified leads (PQL) based on usage patterns
+  
+  ## Customer Success and Health Scoring
+  - Customer health score combines usage, engagement, and support metrics
+  - Health categories: Healthy (80-100), At Risk (50-79), Critical (<50)
+  - Leading indicators include login frequency, feature usage, support tickets
+  - Customer success intervention triggers based on health score changes
+  
+  ## Subscription Management
+  - Plan types: Free Trial, Freemium, Starter, Professional, Enterprise
+  - Billing cycles: Monthly, Annual, Multi-year contracts
+  - Upgrades and downgrades tracked as expansion/contraction revenue
+  - Free trial conversion rates by source and user behavior
+  
+  ## Time Periods and Business Cycles
+  - SaaS metrics typically measured monthly and quarterly
+  - Customer anniversary dates important for retention analysis
+  - Seasonal patterns in B2B vs B2C markets
+  - End-of-quarter effects on sales and renewals
+  
+  ## Data Quality and User Privacy
+  - User activity data anonymized for analytics
+  - GDPR and privacy compliance for user data
+  - Exclude internal users and test accounts from metrics
+  - Real-time data for operational metrics, batch for reporting
+
+tables:
+  # User accounts and profiles
+  - name: users
+    base_table:
+      database: saas_db
+      schema: public
+      table: users
+    
+    dimensions:
+      - name: user_id
+        expr: user_id
+        description: "Unique identifier for each user account"
+        unique_identifier: true
+        synonyms: ["user", "account ID", "customer ID"]
+        
+      - name: user_email
+        expr: email_address
+        description: "User email address (primary identifier)"
+        synonyms: ["email", "user email", "account email"]
+        
+      - name: signup_date
+        expr: signup_date
+        description: "Date when user first created their account"
+        synonyms: ["registration date", "account creation date", "join date"]
+        
+      - name: user_segment
+        expr: user_segment
+        description: "User classification: SMB, Mid-Market, Enterprise, Individual"
+        synonyms: ["customer segment", "user type", "account segment", "customer category"]
+        
+      - name: company_size
+        expr: company_size_category
+        description: "Size of user's company: 1-10, 11-50, 51-200, 201-1000, 1000+ employees"
+        synonyms: ["company size", "organization size", "business size"]
+        
+      - name: industry
+        expr: industry_category
+        description: "Industry classification of user's company"
+        synonyms: ["business industry", "sector", "vertical market"]
+        cortex_search_service:
+          service: industry_search
+          literal_column: industry_category
+          database: saas_db
+          schema: public
+        
+      - name: acquisition_channel
+        expr: acquisition_source
+        description: "How user found the product: Organic, Paid Search, Social, Referral, Direct"
+        synonyms: ["acquisition source", "marketing channel", "signup source"]
+        
+      - name: user_status
+        expr: account_status
+        description: "Current account status: Active, Cancelled, Suspended, Trial"
+        synonyms: ["account status", "subscription status"]
+        
+    facts:
+      - name: churn_risk_score
+        expr: churn_probability_score
+        description: "Predictive score indicating likelihood of churn (0-100 scale)"
+        synonyms: ["churn risk", "retention risk", "churn probability"]
+
+  # Subscription plans and billing
+  - name: subscriptions
+    base_table:
+      database: saas_db
+      schema: public
+      table: subscriptions
+    
+    dimensions:
+      - name: subscription_id
+        expr: subscription_id
+        description: "Unique identifier for each subscription"
+        unique_identifier: true
+        synonyms: ["subscription", "plan ID"]
+        
+      - name: user_id
+        expr: user_id
+        description: "User who owns this subscription"
+        synonyms: ["user", "subscriber"]
+        
+      - name: plan_type
+        expr: plan_name
+        description: "Subscription plan: Free Trial, Starter, Professional, Enterprise"
+        synonyms: ["plan", "subscription plan", "pricing tier", "service level"]
+        
+      - name: billing_frequency
+        expr: billing_cycle
+        description: "How often customer is billed: Monthly, Annual, Quarterly"
+        synonyms: ["billing cycle", "payment frequency", "billing period"]
+        
+      - name: subscription_start_date
+        expr: start_date
+        description: "Date when subscription became active"
+        synonyms: ["start date", "activation date"]
+        
+      - name: subscription_end_date
+        expr: end_date
+        description: "Date when subscription ends or ended"
+        synonyms: ["end date", "expiration date", "cancellation date"]
+        
+      - name: subscription_status
+        expr: status
+        description: "Current status: Active, Cancelled, Expired, Paused, Trial"
+        synonyms: ["status", "subscription state"]
+        
+      - name: cancellation_reason
+        expr: cancellation_reason
+        description: "Reason for cancellation: Price, Features, Competition, Other"
+        synonyms: ["churn reason", "cancellation cause"]
+        
+    facts:
+      - name: monthly_revenue
+        expr: normalized_monthly_revenue
+        description: "Monthly recurring revenue from this subscription"
+        synonyms: ["MRR", "monthly recurring revenue", "monthly value"]
+        
+      - name: annual_contract_value
+        expr: annual_contract_value
+        description: "Total annual value of subscription contract"
+        synonyms: ["ACV", "annual value", "contract value"]
+        
+      - name: discount_amount
+        expr: discount_amount
+        description: "Monthly discount applied to subscription"
+        synonyms: ["discount", "promotion value", "savings"]
+
+  # User activity and engagement
+  - name: usage_events
+    base_table:
+      database: saas_db
+      schema: public
+      table: user_usage_events
+    
+    dimensions:
+      - name: event_id
+        expr: event_id
+        description: "Unique identifier for each usage event"
+        unique_identifier: true
+        synonyms: ["event", "activity ID"]
+        
+      - name: user_id
+        expr: user_id
+        description: "User who performed the action"
+        synonyms: ["user"]
+        
+      - name: event_date
+        expr: event_timestamp
+        description: "Date and time when event occurred"
+        synonyms: ["activity date", "event time", "usage date"]
+        
+      - name: feature_name
+        expr: feature_name
+        description: "Product feature that was used"
+        synonyms: ["feature", "product feature", "functionality"]
+        cortex_search_service:
+          service: feature_search
+          literal_column: feature_name
+          database: saas_db
+          schema: public
+        
+      - name: event_type
+        expr: event_type
+        description: "Type of user action: Login, Feature Use, Export, API Call, etc."
+        synonyms: ["action type", "activity type", "event category"]
+        
+      - name: device_type
+        expr: device_type
+        description: "Device used: Desktop, Mobile, Tablet"
+        synonyms: ["device", "platform"]
+        
+      - name: browser
+        expr: browser_name
+        description: "Web browser used for the session"
+        synonyms: ["browser type", "user agent"]
+        
+    facts:
+      - name: session_duration
+        expr: session_duration_minutes
+        description: "Length of user session in minutes"
+        synonyms: ["session time", "usage time", "time spent"]
+        
+      - name: api_calls
+        expr: api_calls_count
+        description: "Number of API calls made during session"
+        synonyms: ["API usage", "API requests", "integration calls"]
+        
+      - name: actions_count
+        expr: user_actions_count
+        description: "Number of actions performed during session"
+        synonyms: ["actions", "user interactions", "activity count"]
+
+  # Customer support and success
+  - name: support_tickets
+    base_table:
+      database: saas_db
+      schema: public
+      table: support_tickets
+    
+    dimensions:
+      - name: ticket_id
+        expr: ticket_id
+        description: "Unique identifier for support ticket"
+        unique_identifier: true
+        synonyms: ["ticket", "support case ID"]
+        
+      - name: user_id
+        expr: user_id
+        description: "User who submitted the support request"
+        synonyms: ["user", "customer"]
+        
+      - name: created_date
+        expr: created_date
+        description: "Date when support ticket was created"
+        synonyms: ["submission date", "ticket date", "created date"]
+        
+      - name: resolved_date
+        expr: resolved_date
+        description: "Date when ticket was resolved and closed"
+        synonyms: ["resolution date", "closed date"]
+        
+      - name: ticket_priority
+        expr: priority_level
+        description: "Priority level: Low, Medium, High, Critical"
+        synonyms: ["priority", "urgency", "severity"]
+        
+      - name: ticket_category
+        expr: issue_category
+        description: "Type of issue: Bug, Feature Request, How-to, Billing, etc."
+        synonyms: ["issue type", "category", "ticket type"]
+        
+      - name: resolution_type
+        expr: resolution_type
+        description: "How ticket was resolved: Fixed, Workaround, Duplicate, etc."
+        synonyms: ["resolution", "outcome"]
+        
+    facts:
+      - name: resolution_time_hours
+        expr: resolution_time_hours
+        description: "Time from ticket creation to resolution in hours"
+        synonyms: ["resolution time", "time to resolve", "support response time"]
+        
+      - name: customer_satisfaction
+        expr: satisfaction_rating
+        description: "Customer satisfaction rating for support interaction (1-5 scale)"
+        synonyms: ["CSAT", "satisfaction score", "customer rating"]
+
+  # Product features and capabilities
+  - name: features
+    base_table:
+      database: saas_db
+      schema: public
+      table: product_features
+    
+    dimensions:
+      - name: feature_id
+        expr: feature_id
+        description: "Unique identifier for product feature"
+        unique_identifier: true
+        
+      - name: feature_name
+        expr: feature_name
+        description: "Name of product feature or capability"
+        synonyms: ["feature", "functionality", "product capability"]
+        
+      - name: feature_category
+        expr: feature_category
+        description: "Category grouping: Core, Advanced, Integration, Analytics"
+        synonyms: ["feature group", "capability category"]
+        
+      - name: plan_availability
+        expr: minimum_plan_required
+        description: "Lowest plan level that includes this feature"
+        synonyms: ["plan requirement", "feature tier"]
+        
+      - name: release_date
+        expr: feature_release_date
+        description: "Date when feature was first released"
+        synonyms: ["launch date", "release date"]
+        
+    facts:
+      - name: adoption_rate
+        expr: adoption_percentage
+        description: "Percentage of eligible users who have used this feature"
+        synonyms: ["feature adoption", "usage rate", "utilization rate"]
+
+# Define relationships between SaaS business entities
+relationships:
+  - name: subscriptions_to_users
+    left_table: subscriptions
+    right_table: users
+    join_columns:
+      - left_column: user_id
+        right_column: user_id
+    description: "Subscriptions belong to specific users"
+
+  - name: usage_events_to_users
+    left_table: usage_events
+    right_table: users
+    join_columns:
+      - left_column: user_id
+        right_column: user_id
+    description: "Usage events track activity by specific users"
+
+  - name: support_tickets_to_users
+    left_table: support_tickets
+    right_table: users
+    join_columns:
+      - left_column: user_id
+        right_column: user_id
+    description: "Support tickets are submitted by specific users"
+
+  - name: usage_events_to_features
+    left_table: usage_events
+    right_table: features
+    join_columns:
+      - left_column: feature_name
+        right_column: feature_name
+    description: "Usage events track interaction with specific product features"
+
+# Pre-validated SaaS business questions
+verified_queries:
+  # Revenue and Growth Metrics
+  - question: "What's our monthly recurring revenue (MRR)?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show MRR growth trends over the last 12 months"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our average revenue per user (ARPU)?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which subscription plans generate the most revenue?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our annual recurring revenue (ARR) by customer segment?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Customer Acquisition and Conversion
+  - question: "How many new users signed up this month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our trial-to-paid conversion rate?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which acquisition channels bring the best customers?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show user acquisition trends by channel"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our customer acquisition cost (CAC) by channel?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Churn and Retention Analysis
+  - question: "What's our monthly churn rate?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which customer segments have the highest churn?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What are the main reasons customers cancel?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show retention rates by cohort"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which users are at highest risk of churning?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # User Engagement and Product Usage
+  - question: "How many daily active users do we have?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our monthly active user (MAU) count?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which features have the highest adoption rates?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show user engagement trends by plan type"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's the average session duration by user segment?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Feature Adoption and Product Analytics
+  - question: "Which features are used most frequently?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show feature adoption by user onboarding stage"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which features correlate with higher retention?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our API usage by customer segment?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Customer Success and Support
+  - question: "What's our average support ticket resolution time?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which customers submit the most support tickets?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show customer satisfaction scores by support category"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What are the most common support issues?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Business Intelligence and Forecasting
+  - question: "What's our net revenue retention rate?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show revenue expansion vs contraction"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which customers are likely to upgrade their plans?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our customer lifetime value by acquisition channel?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Operational Metrics
+  - question: "What's our server uptime and performance?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show usage patterns by time of day"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which geographic regions have the most users?"
+    verified_at: "2024-01-15T10:30:00Z"

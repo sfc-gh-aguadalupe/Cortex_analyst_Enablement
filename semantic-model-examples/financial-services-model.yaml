@@ -1,0 +1,399 @@
+# Financial Services Analytics Semantic Model
+# Banking and financial institution analytics model
+# Includes customers, accounts, transactions, and risk analysis
+
+name: banking_analytics
+description: "Comprehensive banking and financial services analytics model covering customer relationships, account management, transaction analysis, and regulatory reporting"
+
+# Financial services business context and compliance rules
+custom_instructions: |
+  Financial Services Business Rules and Compliance:
+  
+  ## Regulatory Context
+  - All financial calculations must comply with banking regulations
+  - Customer data handling follows KYC (Know Your Customer) requirements
+  - Risk assessments use standardized Basel III frameworks
+  - Interest calculations follow standard banking conventions
+  
+  ## Financial Calculations
+  - Interest earned = average daily balance × annual interest rate / 365
+  - Fee income excludes regulatory-mandated refunds
+  - Net interest margin = (interest income - interest expense) / average earning assets
+  - Loan loss provisions follow CECL (Current Expected Credit Loss) standards
+  
+  ## Customer Classification
+  - Retail customers: Individual banking customers
+  - Commercial customers: Business banking relationships
+  - Private banking: High net worth individuals (>$1M assets)
+  - Institutional: Corporate and government entities
+  
+  ## Risk Management
+  - Credit risk scores: 300-850 scale (higher = lower risk)
+  - Risk categories: Low (750+), Medium (600-749), High (<600)
+  - Regulatory capital ratios must meet minimum requirements
+  - Stress testing scenarios included in analysis
+  
+  ## Time Periods and Reporting
+  - Fiscal year aligns with calendar year
+  - Quarterly regulatory reporting deadlines
+  - Monthly management reporting cycles
+  - Daily liquidity and risk monitoring
+  
+  ## Data Quality and Security
+  - All customer data anonymized for analytics
+  - Transaction amounts rounded to nearest cent
+  - Exclude test/training transactions
+  - Audit trail maintained for all calculations
+
+tables:
+  # Customer relationship table
+  - name: customers
+    base_table:
+      database: banking_db
+      schema: public
+      table: customers
+    
+    dimensions:
+      - name: customer_id
+        expr: customer_id
+        description: "Unique customer identifier used across all banking systems"
+        unique_identifier: true
+        synonyms: ["customer", "client ID", "account holder ID"]
+        
+      - name: customer_name
+        expr: customer_name
+        description: "Customer full name (anonymized for privacy)"
+        synonyms: ["client name", "account holder", "customer"]
+        
+      - name: customer_type
+        expr: customer_type
+        description: "Customer classification: Retail, Commercial, Private Banking, or Institutional"
+        synonyms: ["client type", "customer category", "customer segment", "banking relationship type"]
+        
+      - name: customer_since_date
+        expr: customer_since_date
+        description: "Date when customer first established relationship with bank"
+        synonyms: ["onboarding date", "relationship start date", "customer start date"]
+        
+      - name: primary_branch
+        expr: primary_branch_id
+        description: "Main branch where customer conducts most banking business"
+        synonyms: ["home branch", "main branch", "primary location"]
+        
+      - name: customer_region
+        expr: region
+        description: "Geographic region for customer location and service area"
+        synonyms: ["region", "territory", "service area", "geographic area"]
+        
+      - name: risk_profile
+        expr: risk_profile
+        description: "Customer risk assessment: Low, Medium, or High based on multiple factors"
+        synonyms: ["risk category", "risk level", "credit risk", "customer risk"]
+        
+    facts:
+      - name: credit_score
+        expr: credit_score
+        description: "Customer credit score on 300-850 scale (higher scores indicate lower risk)"
+        synonyms: ["credit rating", "creditworthiness", "credit assessment"]
+        
+      - name: relationship_value
+        expr: total_relationship_value
+        description: "Total value of all customer accounts and relationships with bank"
+        synonyms: ["customer value", "total relationship", "account value"]
+
+  # Account management table
+  - name: accounts
+    base_table:
+      database: banking_db
+      schema: public
+      table: accounts
+    
+    dimensions:
+      - name: account_id
+        expr: account_id
+        description: "Unique account identifier for each banking product"
+        unique_identifier: true
+        synonyms: ["account number", "account"]
+        
+      - name: customer_id
+        expr: customer_id
+        description: "Links account to the customer who owns it"
+        synonyms: ["account owner", "customer"]
+        
+      - name: account_type
+        expr: account_type
+        description: "Type of banking product: Checking, Savings, Money Market, CD, Loan, Credit Card"
+        synonyms: ["product type", "account product", "banking product"]
+        
+      - name: account_subtype
+        expr: account_subtype
+        description: "Specific product variation within account type"
+        synonyms: ["product subtype", "account variation"]
+        
+      - name: branch_id
+        expr: branch_id
+        description: "Branch where account was opened"
+        synonyms: ["opening branch", "home branch"]
+        
+      - name: open_date
+        expr: open_date
+        description: "Date when account was first opened"
+        synonyms: ["account opening date", "start date"]
+        
+      - name: account_status
+        expr: account_status
+        description: "Current account status: Active, Closed, Dormant, Restricted"
+        synonyms: ["status", "account state"]
+        
+    facts:
+      - name: current_balance
+        expr: current_balance
+        description: "Current account balance in USD"
+        synonyms: ["balance", "account balance", "available balance"]
+        
+      - name: average_balance
+        expr: average_monthly_balance
+        description: "Average daily balance over the last month"
+        synonyms: ["avg balance", "mean balance", "typical balance"]
+        
+      - name: interest_rate
+        expr: interest_rate
+        description: "Annual interest rate applied to account (as percentage)"
+        synonyms: ["rate", "APY", "annual percentage yield"]
+        
+      - name: credit_limit
+        expr: credit_limit
+        description: "Maximum credit available (for credit products)"
+        synonyms: ["credit line", "borrowing limit", "available credit"]
+
+  # Transaction activity table
+  - name: transactions
+    base_table:
+      database: banking_db
+      schema: public
+      table: transactions
+    
+    dimensions:
+      - name: transaction_id
+        expr: transaction_id
+        description: "Unique identifier for each banking transaction"
+        unique_identifier: true
+        synonyms: ["transaction", "txn ID"]
+        
+      - name: account_id
+        expr: account_id
+        description: "Account involved in the transaction"
+        synonyms: ["account"]
+        
+      - name: transaction_date
+        expr: transaction_date
+        description: "Date and time when transaction occurred"
+        synonyms: ["txn date", "transaction time", "activity date"]
+        
+      - name: transaction_type
+        expr: transaction_type
+        description: "Type of transaction: Deposit, Withdrawal, Transfer, Payment, Fee"
+        synonyms: ["txn type", "activity type", "transaction category"]
+        
+      - name: transaction_channel
+        expr: transaction_channel
+        description: "How transaction was initiated: ATM, Online, Mobile, Branch, Phone"
+        synonyms: ["channel", "delivery channel", "transaction method"]
+        
+      - name: transaction_category
+        expr: transaction_category
+        description: "Business category: Retail, Gas, Grocery, Entertainment, etc."
+        synonyms: ["merchant category", "spending category", "transaction category"]
+        
+      - name: merchant_name
+        expr: merchant_name
+        description: "Name of merchant or counterparty in transaction"
+        synonyms: ["merchant", "payee", "vendor"]
+        cortex_search_service:
+          service: merchant_search
+          literal_column: merchant_name
+          database: banking_db
+          schema: public
+        
+    facts:
+      - name: transaction_amount
+        expr: transaction_amount
+        description: "Dollar amount of transaction (positive for credits, negative for debits)"
+        synonyms: ["amount", "txn amount", "transaction value", "dollar amount"]
+        
+      - name: fee_amount
+        expr: fee_amount
+        description: "Any fees charged for this transaction"
+        synonyms: ["fee", "transaction fee", "charge"]
+        
+      - name: running_balance
+        expr: running_balance
+        description: "Account balance after this transaction was processed"
+        synonyms: ["balance after", "ending balance"]
+
+  # Branch and location information
+  - name: branches
+    base_table:
+      database: banking_db
+      schema: public
+      table: branches
+    
+    dimensions:
+      - name: branch_id
+        expr: branch_id
+        description: "Unique identifier for each bank branch location"
+        unique_identifier: true
+        synonyms: ["branch", "location ID"]
+        
+      - name: branch_name
+        expr: branch_name
+        description: "Official name of the branch location"
+        synonyms: ["branch location", "office name"]
+        
+      - name: branch_type
+        expr: branch_type
+        description: "Type of location: Full Service Branch, Limited Service, ATM Only"
+        synonyms: ["location type", "branch category"]
+        
+      - name: region
+        expr: region
+        description: "Geographic region where branch is located"
+        synonyms: ["area", "territory", "geographic region"]
+        
+      - name: state
+        expr: state
+        description: "State where branch is located"
+        synonyms: ["state code", "province"]
+        
+      - name: city
+        expr: city
+        description: "City where branch is located"
+        synonyms: ["location", "municipality"]
+        
+    facts:
+      - name: employee_count
+        expr: employee_count
+        description: "Number of employees working at this branch"
+        synonyms: ["staff count", "employees", "headcount"]
+
+# Define relationships between banking entities
+relationships:
+  - name: accounts_to_customers
+    left_table: accounts
+    right_table: customers
+    join_columns:
+      - left_column: customer_id
+        right_column: customer_id
+    description: "Accounts belong to customers who own and manage them"
+
+  - name: transactions_to_accounts
+    left_table: transactions
+    right_table: accounts
+    join_columns:
+      - left_column: account_id
+        right_column: account_id
+    description: "Transactions occur within specific customer accounts"
+
+  - name: accounts_to_branches
+    left_table: accounts
+    right_table: branches
+    join_columns:
+      - left_column: branch_id
+        right_column: branch_id
+    description: "Accounts are opened and serviced by specific branches"
+
+  - name: customers_to_branches
+    left_table: customers
+    right_table: branches
+    join_columns:
+      - left_column: primary_branch
+        right_column: branch_id
+    description: "Customers have primary branch relationships for main banking services"
+
+# Pre-validated business questions for banking analytics
+verified_queries:
+  # Deposit and Account Analysis
+  - question: "What's our total deposit balance across all accounts?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many new accounts were opened this month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's the average account balance by account type?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which branches have the highest deposit growth?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show me account opening trends by quarter"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Customer Analysis
+  - question: "How many customers do we have by customer type?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our customer acquisition rate by region?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which customer segments have the highest relationship values?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show customer retention rates by branch"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Transaction and Activity Analysis
+  - question: "What's our daily transaction volume?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which transaction channels are most popular?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show transaction trends by channel over the last year"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our fee income from transactions this quarter?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Risk and Credit Analysis
+  - question: "What's our average customer credit score by region?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many high-risk customers do we have?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show credit score distribution by customer type"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Branch Performance
+  - question: "Which branches have the highest customer counts?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's the average deposit balance by branch?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show branch performance by total relationship value"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Product Performance
+  - question: "Which account types are growing fastest?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our checking account market share by region?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show product adoption rates for new customers"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Regulatory and Compliance Reporting
+  - question: "What's our loan-to-deposit ratio this quarter?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show capital adequacy ratios by business line"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Operational Efficiency
+  - question: "What's our cost per transaction by channel?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show digital adoption rates by customer segment"
+    verified_at: "2024-01-15T10:30:00Z"

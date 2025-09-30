@@ -1,0 +1,367 @@
+# E-commerce Analytics Semantic Model
+# Complete semantic model for online retail business analytics
+# Includes customers, products, orders, and sales analysis
+
+name: ecommerce_analytics
+description: "Complete e-commerce analytics model covering customer behavior, product performance, sales trends, and business intelligence for online retail operations"
+
+# Business context and calculation rules
+custom_instructions: |
+  E-commerce Business Rules and Context:
+  
+  ## Financial Calculations
+  - Revenue includes order total, tax, and shipping fees
+  - Profit margin = (revenue - cost_of_goods_sold) / revenue * 100
+  - Average Order Value (AOV) = total revenue / number of orders
+  - Customer Lifetime Value = total customer spend / customer tenure in months
+  
+  ## Customer Segmentation
+  - Premium customers: Annual spend > $5,000
+  - Standard customers: Annual spend $1,000 - $5,000  
+  - Basic customers: Annual spend < $1,000
+  - New customers: Registered within last 90 days
+  
+  ## Time Periods and Seasonality
+  - Business operates in EST timezone
+  - Peak seasons: November-December (holiday), June-August (summer)
+  - "Recent" refers to last 30 days unless specified
+  - Weekend vs weekday patterns should be considered separately
+  
+  ## Product Analysis
+  - Focus on shipped orders for revenue metrics
+  - Include cancelled orders in conversion analysis
+  - Bundle products analyzed both as bundles and individual items
+  - Seasonal products require year-over-year comparisons
+  
+  ## Data Quality Rules
+  - Exclude test orders (is_test = false)
+  - Include refunds as negative revenue
+  - Only completed orders count toward customer metrics
+
+tables:
+  # Customer dimension table
+  - name: customers
+    base_table:
+      database: ecommerce_db
+      schema: public
+      table: customers
+    
+    dimensions:
+      - name: customer_id
+        expr: customer_id
+        description: "Unique identifier for each customer account"
+        unique_identifier: true
+        
+      - name: customer_name
+        expr: first_name || ' ' || last_name
+        description: "Full customer name combining first and last name"
+        synonyms: ["customer", "client name", "account holder"]
+        
+      - name: email_address
+        expr: email
+        description: "Customer email address for communication and identification"
+        synonyms: ["email", "contact email", "user email"]
+        
+      - name: customer_segment
+        expr: customer_segment
+        description: "Customer value classification based on annual spending: Premium (>$5K), Standard ($1K-$5K), Basic (<$1K)"
+        synonyms: ["customer type", "customer tier", "customer category", "segment", "customer level", "customer class"]
+        
+      - name: registration_date
+        expr: registration_date
+        description: "Date when customer first created their account"
+        synonyms: ["signup date", "account creation date", "join date"]
+        
+      - name: customer_region
+        expr: region
+        description: "Geographic region where customer is located"
+        synonyms: ["region", "area", "location", "geography", "territory"]
+        
+      - name: email_domain
+        expr: SPLIT_PART(email, '@', 2)
+        description: "Email domain to identify business vs personal customers"
+        synonyms: ["domain", "email provider", "company domain"]
+        
+    facts:
+      - name: customer_age
+        expr: DATEDIFF('year', birth_date, CURRENT_DATE())
+        description: "Customer age in years calculated from birth date"
+        synonyms: ["age", "customer age"]
+
+  # Product catalog table  
+  - name: products
+    base_table:
+      database: ecommerce_db
+      schema: public
+      table: products
+    
+    dimensions:
+      - name: product_id
+        expr: product_id
+        description: "Unique product identifier (SKU)"
+        unique_identifier: true
+        synonyms: ["SKU", "product code", "item ID"]
+        
+      - name: product_name
+        expr: product_name
+        description: "Full product name as displayed to customers"
+        synonyms: ["product", "item name", "product title", "item", "merchandise"]
+        cortex_search_service:
+          service: product_name_search
+          literal_column: product_name
+          database: ecommerce_db
+          schema: public
+        
+      - name: category
+        expr: category
+        description: "Primary product category like Electronics, Clothing, Home & Garden, Books"
+        synonyms: ["product category", "department", "section", "product type"]
+        
+      - name: subcategory
+        expr: subcategory
+        description: "More specific product classification within main category"
+        synonyms: ["product subcategory", "product subtype", "detailed category"]
+        
+      - name: brand
+        expr: brand
+        description: "Product manufacturer or brand name"
+        synonyms: ["manufacturer", "make", "brand name", "producer"]
+        cortex_search_service:
+          service: brand_search
+          literal_column: brand
+          database: ecommerce_db
+          schema: public
+        
+      - name: product_status
+        expr: product_status
+        description: "Current product availability: Active, Discontinued, Out of Stock"
+        synonyms: ["status", "availability", "product availability"]
+        
+    facts:
+      - name: unit_price
+        expr: unit_price
+        description: "Current selling price per unit in USD"
+        synonyms: ["price", "cost", "selling price", "retail price", "product price"]
+        
+      - name: cost_of_goods
+        expr: cost_of_goods_sold
+        description: "Cost to acquire or manufacture the product"
+        synonyms: ["COGS", "product cost", "wholesale cost", "cost"]
+        
+      - name: inventory_quantity
+        expr: inventory_quantity
+        description: "Current number of units available in stock"
+        synonyms: ["stock", "inventory", "available quantity", "stock level"]
+
+  # Orders transaction table
+  - name: orders
+    base_table:
+      database: ecommerce_db
+      schema: public
+      table: orders
+    
+    dimensions:
+      - name: order_id
+        expr: order_id
+        description: "Unique identifier for each customer order"
+        unique_identifier: true
+        synonyms: ["order number", "transaction ID"]
+        
+      - name: customer_id
+        expr: customer_id
+        description: "Links to the customer who placed this order"
+        synonyms: ["customer", "buyer ID"]
+        
+      - name: order_date
+        expr: order_date
+        description: "Date and time when the order was placed"
+        synonyms: ["purchase date", "transaction date", "order time"]
+        
+      - name: order_status
+        expr: order_status
+        description: "Current order status: Pending, Processing, Shipped, Delivered, Cancelled"
+        synonyms: ["status", "order state", "delivery status"]
+        
+      - name: shipping_method
+        expr: shipping_method
+        description: "Delivery method chosen: Standard, Express, Overnight, Free Shipping"
+        synonyms: ["delivery method", "shipping option", "delivery speed"]
+        
+      - name: payment_method
+        expr: payment_method
+        description: "How customer paid: Credit Card, PayPal, Bank Transfer, Gift Card"
+        synonyms: ["payment type", "payment option", "billing method"]
+        
+      - name: promotional_code
+        expr: promotional_code
+        description: "Discount code or coupon used on this order"
+        synonyms: ["promo code", "coupon", "discount code", "voucher"]
+        
+    facts:
+      - name: order_total
+        expr: order_total
+        description: "Total order value including items, tax, and shipping"
+        synonyms: ["total amount", "order value", "order amount", "total cost", "revenue"]
+        
+      - name: subtotal
+        expr: subtotal
+        description: "Order value before tax and shipping charges"
+        synonyms: ["subtotal amount", "pre-tax total", "item total"]
+        
+      - name: tax_amount
+        expr: tax_amount
+        description: "Sales tax charged on the order"
+        synonyms: ["tax", "sales tax", "tax charged"]
+        
+      - name: shipping_cost
+        expr: shipping_cost
+        description: "Shipping and handling fees charged"
+        synonyms: ["shipping fee", "delivery cost", "shipping charge"]
+        
+      - name: discount_amount
+        expr: discount_amount
+        description: "Total discount applied from promotions and coupons"
+        synonyms: ["discount", "savings", "promo discount", "coupon savings"]
+
+  # Order line items table
+  - name: order_items
+    base_table:
+      database: ecommerce_db
+      schema: public
+      table: order_items
+    
+    dimensions:
+      - name: order_item_id
+        expr: order_item_id
+        description: "Unique identifier for each line item within an order"
+        unique_identifier: true
+        
+      - name: order_id
+        expr: order_id
+        description: "Links to the parent order containing this item"
+        
+      - name: product_id
+        expr: product_id
+        description: "Links to the specific product ordered"
+        
+    facts:
+      - name: quantity
+        expr: quantity
+        description: "Number of units of this product ordered"
+        synonyms: ["qty", "amount ordered", "units", "count"]
+        
+      - name: unit_price
+        expr: unit_price
+        description: "Price per unit at time of order (may differ from current price)"
+        synonyms: ["item price", "price per unit", "unit cost"]
+        
+      - name: line_total
+        expr: quantity * unit_price
+        description: "Total value for this line item (quantity × unit price)"
+        synonyms: ["line amount", "item total", "line value"]
+
+# Define relationships between tables
+relationships:
+  - name: orders_to_customers
+    left_table: orders
+    right_table: customers
+    join_columns:
+      - left_column: customer_id
+        right_column: customer_id
+    description: "Each order belongs to one customer who placed it"
+
+  - name: order_items_to_orders
+    left_table: order_items
+    right_table: orders
+    join_columns:
+      - left_column: order_id
+        right_column: order_id
+    description: "Order items are line items within specific orders"
+
+  - name: order_items_to_products
+    left_table: order_items
+    right_table: products
+    join_columns:
+      - left_column: product_id
+        right_column: product_id
+    description: "Order items reference specific products from catalog"
+
+# Pre-validated business questions for improved accuracy
+verified_queries:
+  # Revenue and Sales Analysis
+  - question: "What was our total revenue last month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How much money did we make last month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show me last month's sales total"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our revenue trend over the last 6 months?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Product Performance
+  - question: "Which products are our top sellers?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What are our best-selling items?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show me top 10 products by sales volume"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which product categories generate the most revenue?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What products have the highest profit margins?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Customer Analysis
+  - question: "How many customers do we have?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many new customers did we acquire this month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's the average order value by customer segment?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which customer segment generates the most revenue?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show customer acquisition trends by region"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Order and Conversion Analysis
+  - question: "What's our average order value?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many orders were placed last week?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our order conversion rate by traffic source?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show me shipping method preferences by customer segment"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Inventory and Operations
+  - question: "Which products are running low on inventory?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show me inventory levels by product category"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our order fulfillment rate by shipping method?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Seasonal and Trend Analysis
+  - question: "Compare this quarter's performance to last quarter"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show seasonal sales patterns for the last 2 years"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which months have the highest sales volume?"
+    verified_at: "2024-01-15T10:30:00Z"

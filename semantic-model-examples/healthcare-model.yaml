@@ -1,0 +1,428 @@
+# Healthcare Analytics Semantic Model
+# HIPAA-compliant patient and provider analytics model
+# Includes patient visits, diagnoses, treatments, and outcomes
+
+name: healthcare_analytics
+description: "HIPAA-compliant healthcare analytics model for patient care analysis, provider performance, clinical outcomes, and operational efficiency while protecting patient privacy"
+
+# Healthcare-specific business rules and privacy requirements
+custom_instructions: |
+  Healthcare Analytics Business Rules and Privacy:
+  
+  ## Privacy and HIPAA Compliance
+  - All patient data must be aggregated (minimum 10 patients per group)
+  - Never display individual patient information
+  - Use age groups instead of specific ages: 0-17, 18-35, 36-55, 56-75, 75+
+  - Geographic data limited to state level or broader
+  - All patient identifiers are anonymized
+  
+  ## Clinical Context and Standards
+  - Primary diagnosis takes precedence over secondary diagnoses
+  - Include only completed visits for outcome analysis
+  - Emergency visits vs scheduled visits analyzed separately
+  - Readmission within 30 days considered quality indicator
+  - Length of stay calculations exclude same-day visits
+  
+  ## Quality and Outcome Metrics
+  - Patient satisfaction scores include response rate context
+  - Provider performance requires minimum 20 cases for significance
+  - Mortality rates adjusted for risk factors and case mix
+  - Infection rates follow CDC definitions and guidelines
+  
+  ## Financial and Operational Rules
+  - Cost analysis includes both direct and allocated costs
+  - Revenue recognition follows healthcare accounting standards
+  - Insurance reimbursement rates vary by payer and contract
+  - Charity care and bad debt handled separately
+  
+  ## Time Periods and Reporting
+  - Clinical reporting follows calendar year
+  - Quality measures often use rolling 12-month periods
+  - "Recent" refers to last 90 days for patient patterns
+  - Seasonal illness patterns require year-over-year comparisons
+  
+  ## Data Quality and Accuracy
+  - Only include visits with complete documentation
+  - Exclude test patients and training data
+  - Handle coding updates and ICD version changes
+  - Ensure provider credentials and licenses are current
+
+tables:
+  # Patient demographics (anonymized and aggregated)
+  - name: patients
+    base_table:
+      database: healthcare_db
+      schema: public
+      table: patients_anonymized
+    
+    dimensions:
+      - name: patient_id
+        expr: patient_id
+        description: "Anonymized unique patient identifier for analytics (not actual medical record number)"
+        unique_identifier: true
+        synonyms: ["patient", "patient identifier"]
+        
+      - name: age_group
+        expr: age_group
+        description: "Patient age grouping for privacy: 0-17, 18-35, 36-55, 56-75, 75+ years"
+        synonyms: ["age bracket", "age range", "patient age group"]
+        
+      - name: gender
+        expr: gender
+        description: "Patient gender for demographic analysis"
+        synonyms: ["sex", "patient gender"]
+        
+      - name: insurance_type
+        expr: primary_insurance_type
+        description: "Primary insurance coverage: Medicare, Medicaid, Commercial, Self-Pay, Other"
+        synonyms: ["insurance", "payer type", "coverage type", "payer"]
+        
+      - name: patient_state
+        expr: patient_state
+        description: "State where patient resides (for geographic analysis)"
+        synonyms: ["state", "patient location", "residence state"]
+        
+      - name: registration_date
+        expr: registration_date
+        description: "Date when patient first registered with healthcare system"
+        synonyms: ["first visit date", "initial registration"]
+        
+    facts:
+      - name: risk_score
+        expr: clinical_risk_score
+        description: "Clinical risk assessment score based on conditions and history"
+        synonyms: ["patient risk", "clinical risk", "health risk score"]
+
+  # Healthcare provider information
+  - name: providers
+    base_table:
+      database: healthcare_db
+      schema: public
+      table: providers
+    
+    dimensions:
+      - name: provider_id
+        expr: provider_id
+        description: "Unique identifier for healthcare provider"
+        unique_identifier: true
+        synonyms: ["provider", "doctor ID", "physician ID"]
+        
+      - name: provider_name
+        expr: provider_name
+        description: "Healthcare provider name"
+        synonyms: ["doctor name", "physician name", "provider"]
+        
+      - name: specialty
+        expr: medical_specialty
+        description: "Provider medical specialty: Cardiology, Orthopedics, Internal Medicine, etc."
+        synonyms: ["medical specialty", "specialty area", "practice area"]
+        cortex_search_service:
+          service: specialty_search
+          literal_column: medical_specialty
+          database: healthcare_db
+          schema: public
+        
+      - name: department
+        expr: department
+        description: "Hospital department or clinic where provider works"
+        synonyms: ["medical department", "clinic", "service line"]
+        
+      - name: provider_type
+        expr: provider_type
+        description: "Type of healthcare provider: Physician, Nurse Practitioner, Physician Assistant"
+        synonyms: ["provider category", "clinician type"]
+        
+    facts:
+      - name: years_experience
+        expr: years_of_experience
+        description: "Number of years provider has been practicing"
+        synonyms: ["experience", "years practicing", "clinical experience"]
+
+  # Patient visits and encounters
+  - name: visits
+    base_table:
+      database: healthcare_db
+      schema: public
+      table: patient_visits
+    
+    dimensions:
+      - name: visit_id
+        expr: visit_id
+        description: "Unique identifier for each patient visit or encounter"
+        unique_identifier: true
+        synonyms: ["visit", "encounter ID", "appointment ID"]
+        
+      - name: patient_id
+        expr: patient_id
+        description: "Links visit to the patient (anonymized identifier)"
+        synonyms: ["patient"]
+        
+      - name: provider_id
+        expr: attending_provider_id
+        description: "Primary provider responsible for this visit"
+        synonyms: ["attending physician", "primary provider"]
+        
+      - name: facility_id
+        expr: facility_id
+        description: "Healthcare facility where visit occurred"
+        synonyms: ["facility", "location"]
+        
+      - name: visit_date
+        expr: visit_date
+        description: "Date when patient visit occurred"
+        synonyms: ["appointment date", "encounter date", "service date"]
+        
+      - name: visit_type
+        expr: visit_type
+        description: "Type of visit: Inpatient, Outpatient, Emergency, Urgent Care, Telehealth"
+        synonyms: ["encounter type", "visit category", "service type"]
+        
+      - name: admission_source
+        expr: admission_source
+        description: "How patient came to facility: Emergency, Physician Referral, Transfer, etc."
+        synonyms: ["referral source", "admission type"]
+        
+      - name: discharge_disposition
+        expr: discharge_disposition
+        description: "Where patient went after visit: Home, Transfer, SNF, Expired, etc."
+        synonyms: ["discharge status", "disposition"]
+        
+    facts:
+      - name: length_of_stay
+        expr: length_of_stay_hours
+        description: "Duration of visit in hours (for inpatient stays)"
+        synonyms: ["LOS", "stay duration", "visit duration"]
+        
+      - name: total_charges
+        expr: total_visit_charges
+        description: "Total charges for all services during this visit"
+        synonyms: ["visit charges", "total cost", "visit cost"]
+        
+      - name: patient_satisfaction
+        expr: patient_satisfaction_score
+        description: "Patient satisfaction survey score (1-10 scale)"
+        synonyms: ["satisfaction score", "patient rating"]
+
+  # Clinical diagnoses and conditions
+  - name: diagnoses
+    base_table:
+      database: healthcare_db
+      schema: public
+      table: visit_diagnoses
+    
+    dimensions:
+      - name: diagnosis_id
+        expr: diagnosis_id
+        description: "Unique identifier for each diagnosis entry"
+        unique_identifier: true
+        
+      - name: visit_id
+        expr: visit_id
+        description: "Links diagnosis to specific patient visit"
+        synonyms: ["visit", "encounter"]
+        
+      - name: icd_code
+        expr: icd_10_code
+        description: "ICD-10 diagnostic code for medical condition"
+        synonyms: ["ICD code", "diagnosis code", "medical code"]
+        
+      - name: diagnosis_description
+        expr: diagnosis_description
+        description: "Plain language description of medical condition"
+        synonyms: ["condition", "medical condition", "diagnosis", "illness"]
+        cortex_search_service:
+          service: diagnosis_search
+          literal_column: diagnosis_description
+          database: healthcare_db
+          schema: public
+        
+      - name: diagnosis_category
+        expr: diagnosis_category
+        description: "High-level category: Cardiovascular, Respiratory, Infectious, etc."
+        synonyms: ["condition category", "diagnosis type", "medical category"]
+        
+      - name: severity_level
+        expr: severity_level
+        description: "Clinical severity assessment: Mild, Moderate, Severe"
+        synonyms: ["severity", "condition severity", "illness severity"]
+        
+      - name: diagnosis_type
+        expr: diagnosis_type
+        description: "Type of diagnosis: Primary, Secondary, Comorbidity"
+        synonyms: ["diagnosis priority", "condition type"]
+
+  # Healthcare facilities
+  - name: facilities
+    base_table:
+      database: healthcare_db
+      schema: public
+      table: healthcare_facilities
+    
+    dimensions:
+      - name: facility_id
+        expr: facility_id
+        description: "Unique identifier for healthcare facility"
+        unique_identifier: true
+        synonyms: ["facility", "location ID"]
+        
+      - name: facility_name
+        expr: facility_name
+        description: "Name of healthcare facility"
+        synonyms: ["hospital name", "clinic name", "facility"]
+        
+      - name: facility_type
+        expr: facility_type
+        description: "Type of facility: Hospital, Clinic, Urgent Care, Outpatient Center"
+        synonyms: ["facility category", "healthcare facility type"]
+        
+      - name: facility_region
+        expr: region
+        description: "Geographic region where facility is located"
+        synonyms: ["region", "service area", "geographic area"]
+        
+      - name: teaching_status
+        expr: teaching_hospital_flag
+        description: "Whether facility is a teaching hospital with medical residents"
+        synonyms: ["teaching hospital", "academic medical center"]
+        
+    facts:
+      - name: bed_count
+        expr: licensed_bed_count
+        description: "Number of licensed patient beds at facility"
+        synonyms: ["beds", "bed capacity", "facility size"]
+        
+      - name: annual_volume
+        expr: annual_patient_volume
+        description: "Number of patients treated annually at facility"
+        synonyms: ["patient volume", "annual visits", "facility volume"]
+
+# Define relationships between healthcare entities
+relationships:
+  - name: visits_to_patients
+    left_table: visits
+    right_table: patients
+    join_columns:
+      - left_column: patient_id
+        right_column: patient_id
+    description: "Patient visits belong to specific patients"
+
+  - name: visits_to_providers
+    left_table: visits
+    right_table: providers
+    join_columns:
+      - left_column: provider_id
+        right_column: provider_id
+    description: "Visits are attended by specific healthcare providers"
+
+  - name: diagnoses_to_visits
+    left_table: diagnoses
+    right_table: visits
+    join_columns:
+      - left_column: visit_id
+        right_column: visit_id
+    description: "Diagnoses are made during specific patient visits"
+
+  - name: visits_to_facilities
+    left_table: visits
+    right_table: facilities
+    join_columns:
+      - left_column: facility_id
+        right_column: facility_id
+    description: "Patient visits occur at specific healthcare facilities"
+
+# Pre-validated healthcare analytics questions
+verified_queries:
+  # Patient Demographics and Volume
+  - question: "How many patients were treated this month?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our patient volume by age group?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show patient demographics by insurance type"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which facilities have the highest patient volumes?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Clinical Outcomes and Quality
+  - question: "What are the most common diagnoses this quarter?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show diagnosis trends by age group"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our average length of stay by visit type?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which conditions have the longest treatment times?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show patient satisfaction scores by department"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Provider Performance
+  - question: "Which providers see the most patients?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show provider caseload by medical specialty"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What are the average patient satisfaction scores by provider?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which specialties have the best patient outcomes?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Operational Efficiency
+  - question: "What's our bed utilization rate by facility?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show emergency department wait times"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which departments have the highest patient throughput?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our average cost per patient by visit type?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Financial Performance
+  - question: "What's our total revenue by insurance type?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show charges and reimbursement by facility"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which service lines generate the most revenue?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Quality and Safety Metrics
+  - question: "What's our readmission rate by diagnosis category?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show infection rates by facility unit"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which conditions have the highest complication rates?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Population Health
+  - question: "What are the seasonal disease patterns?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show chronic disease prevalence by age group"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which geographic areas have the highest disease rates?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Utilization Analysis
+  - question: "What's our telehealth adoption rate?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show visit patterns by day of week"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which services are most in demand?"
+    verified_at: "2024-01-15T10:30:00Z"

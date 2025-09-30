@@ -1,0 +1,475 @@
+# Manufacturing and Supply Chain Analytics Semantic Model
+# Production, quality, supplier, and operational analytics
+# Includes materials, production orders, quality metrics, and supply chain
+
+name: manufacturing_analytics
+description: "Comprehensive manufacturing and supply chain analytics model covering production efficiency, quality metrics, supplier performance, and operational optimization"
+
+# Manufacturing business rules and operational context
+custom_instructions: |
+  Manufacturing and Supply Chain Business Rules:
+  
+  ## Production Standards and Metrics
+  - Production efficiency = (actual output / planned output) × 100
+  - Overall Equipment Effectiveness (OEE) = availability × performance × quality
+  - Cycle time includes setup, processing, and teardown
+  - Downtime categories: Planned (maintenance) vs Unplanned (breakdowns)
+  - First-pass yield = units passing quality on first attempt / total units
+  
+  ## Quality Management
+  - Defect rate = defective units / total units produced × 100
+  - Six Sigma quality targets: <3.4 defects per million opportunities
+  - Quality costs include prevention, appraisal, and failure costs
+  - Critical quality characteristics tracked per product specification
+  - Root cause analysis required for major quality incidents
+  
+  ## Supply Chain Operations
+  - Lead time = order placement to receipt at facility
+  - Supplier performance includes quality, delivery, and service metrics
+  - Safety stock levels based on demand variability and lead time
+  - Just-in-time principles minimize inventory carrying costs
+  - Supplier scorecards updated monthly with performance metrics
+  
+  ## Cost Management
+  - Standard cost includes material, labor, and overhead allocation
+  - Variance analysis compares actual vs standard costs
+  - Activity-based costing for accurate product profitability
+  - Scrap and rework costs tracked separately from standard costs
+  - Energy costs allocated based on machine utilization
+  
+  ## Time Periods and Scheduling
+  - Production schedules based on customer demand forecasts
+  - Shift patterns: 1st (6AM-2PM), 2nd (2PM-10PM), 3rd (10PM-6AM)
+  - Maintenance windows scheduled during planned downtime
+  - Seasonal demand patterns affect production planning
+  - Continuous improvement measured quarterly
+  
+  ## Safety and Compliance
+  - Safety incidents categorized by severity and type
+  - Environmental compliance tracked for emissions and waste
+  - Regulatory requirements vary by product and market
+  - Audit trails maintained for quality and compliance
+  - Training records linked to production authorization
+
+tables:
+  # Supplier master data
+  - name: suppliers
+    base_table:
+      database: manufacturing_db
+      schema: public
+      table: suppliers
+    
+    dimensions:
+      - name: supplier_id
+        expr: supplier_id
+        description: "Unique identifier for each supplier partner"
+        unique_identifier: true
+        synonyms: ["supplier", "vendor ID", "partner ID"]
+        
+      - name: supplier_name
+        expr: supplier_name
+        description: "Official name of supplier organization"
+        synonyms: ["vendor name", "supplier company", "vendor"]
+        cortex_search_service:
+          service: supplier_search
+          literal_column: supplier_name
+          database: manufacturing_db
+          schema: public
+        
+      - name: supplier_category
+        expr: supplier_category
+        description: "Type of supplier: Raw Materials, Components, Services, Equipment"
+        synonyms: ["vendor category", "supplier type", "supplier classification"]
+        
+      - name: supplier_country
+        expr: country
+        description: "Country where supplier is located"
+        synonyms: ["country", "supplier location", "origin country"]
+        
+      - name: supplier_status
+        expr: supplier_status
+        description: "Current supplier status: Active, Qualified, Under Review, Suspended"
+        synonyms: ["vendor status", "approval status"]
+        
+      - name: certification_level
+        expr: quality_certification
+        description: "Quality certifications: ISO 9001, AS9100, TS 16949, etc."
+        synonyms: ["quality certification", "certification", "quality standard"]
+        
+    facts:
+      - name: lead_time_days
+        expr: average_lead_time_days
+        description: "Average time from order placement to delivery in days"
+        synonyms: ["lead time", "delivery time", "procurement time"]
+        
+      - name: quality_rating
+        expr: quality_rating_score
+        description: "Supplier quality performance score (0-100 scale)"
+        synonyms: ["quality score", "performance rating", "quality rating"]
+
+  # Materials and components inventory
+  - name: materials
+    base_table:
+      database: manufacturing_db
+      schema: public
+      table: materials
+    
+    dimensions:
+      - name: material_id
+        expr: material_id
+        description: "Unique identifier for each material or component"
+        unique_identifier: true
+        synonyms: ["material", "part number", "component ID"]
+        
+      - name: material_name
+        expr: material_name
+        description: "Descriptive name of material or component"
+        synonyms: ["material description", "part name", "component name"]
+        cortex_search_service:
+          service: material_search
+          literal_column: material_name
+          database: manufacturing_db
+          schema: public
+        
+      - name: material_type
+        expr: material_type
+        description: "Classification: Raw Material, Sub-Assembly, Component, Packaging"
+        synonyms: ["material category", "part type", "component type"]
+        
+      - name: supplier_id
+        expr: primary_supplier_id
+        description: "Primary supplier for this material"
+        synonyms: ["supplier", "vendor"]
+        
+      - name: unit_of_measure
+        expr: unit_of_measure
+        description: "How material is measured: Each, Pounds, Gallons, Meters, etc."
+        synonyms: ["UOM", "unit", "measurement unit"]
+        
+      - name: material_category
+        expr: abc_category
+        description: "ABC analysis category based on value and usage: A (high), B (medium), C (low)"
+        synonyms: ["ABC category", "inventory classification"]
+        
+    facts:
+      - name: unit_cost
+        expr: standard_unit_cost
+        description: "Standard cost per unit of material in USD"
+        synonyms: ["material cost", "unit price", "cost per unit"]
+        
+      - name: current_inventory
+        expr: current_stock_quantity
+        description: "Current quantity available in inventory"
+        synonyms: ["stock level", "inventory quantity", "on-hand quantity"]
+        
+      - name: reorder_point
+        expr: reorder_point_quantity
+        description: "Inventory level that triggers reorder"
+        synonyms: ["reorder level", "minimum stock", "safety stock threshold"]
+
+  # Finished products
+  - name: products
+    base_table:
+      database: manufacturing_db
+      schema: public
+      table: finished_products
+    
+    dimensions:
+      - name: product_id
+        expr: product_id
+        description: "Unique identifier for finished product"
+        unique_identifier: true
+        synonyms: ["product", "finished good ID", "SKU"]
+        
+      - name: product_name
+        expr: product_name
+        description: "Commercial name of finished product"
+        synonyms: ["product description", "finished good name"]
+        
+      - name: product_line
+        expr: product_line
+        description: "Product family or line grouping"
+        synonyms: ["product family", "product group", "product series"]
+        
+      - name: product_category
+        expr: product_category
+        description: "High-level product classification"
+        synonyms: ["product type", "category"]
+        
+    facts:
+      - name: standard_cost
+        expr: standard_manufacturing_cost
+        description: "Standard cost to manufacture this product"
+        synonyms: ["manufacturing cost", "production cost", "cost to make"]
+        
+      - name: selling_price
+        expr: list_selling_price
+        description: "Standard selling price for this product"
+        synonyms: ["price", "list price", "sales price"]
+
+  # Production orders and work orders
+  - name: production_orders
+    base_table:
+      database: manufacturing_db
+      schema: public
+      table: production_orders
+    
+    dimensions:
+      - name: order_id
+        expr: production_order_id
+        description: "Unique identifier for production order"
+        unique_identifier: true
+        synonyms: ["production order", "work order ID", "job number"]
+        
+      - name: product_id
+        expr: product_id
+        description: "Product being manufactured in this order"
+        synonyms: ["product", "finished good"]
+        
+      - name: facility_id
+        expr: manufacturing_facility_id
+        description: "Facility where production takes place"
+        synonyms: ["facility", "plant", "manufacturing site"]
+        
+      - name: production_line
+        expr: production_line
+        description: "Specific production line or work center"
+        synonyms: ["line", "work center", "manufacturing line"]
+        
+      - name: order_status
+        expr: order_status
+        description: "Current status: Planned, In Progress, Completed, On Hold, Cancelled"
+        synonyms: ["status", "production status", "order state"]
+        
+      - name: planned_start_date
+        expr: planned_start_date
+        description: "Scheduled start date for production"
+        synonyms: ["planned start", "scheduled start", "start date"]
+        
+      - name: actual_start_date
+        expr: actual_start_date
+        description: "Actual date production began"
+        synonyms: ["actual start", "start date"]
+        
+      - name: completion_date
+        expr: completion_date
+        description: "Date when production was completed"
+        synonyms: ["finish date", "completion", "end date"]
+        
+      - name: shift
+        expr: production_shift
+        description: "Manufacturing shift: 1st (Day), 2nd (Evening), 3rd (Night)"
+        synonyms: ["shift number", "work shift"]
+        
+    facts:
+      - name: planned_quantity
+        expr: planned_production_quantity
+        description: "Target quantity to be produced"
+        synonyms: ["planned output", "target quantity", "scheduled quantity"]
+        
+      - name: actual_quantity
+        expr: actual_production_quantity
+        description: "Actual quantity produced"
+        synonyms: ["actual output", "produced quantity", "output"]
+        
+      - name: good_quantity
+        expr: good_units_produced
+        description: "Number of units passing quality inspection"
+        synonyms: ["good units", "quality units", "passed units"]
+        
+      - name: defect_quantity
+        expr: defective_units
+        description: "Number of units with defects or quality issues"
+        synonyms: ["defects", "rejects", "defective units", "scrap"]
+        
+      - name: setup_time_hours
+        expr: setup_time_hours
+        description: "Time spent setting up equipment for production"
+        synonyms: ["setup time", "changeover time"]
+        
+      - name: run_time_hours
+        expr: actual_run_time_hours
+        description: "Active production time excluding breaks and downtime"
+        synonyms: ["run time", "production time", "cycle time"]
+        
+      - name: downtime_hours
+        expr: unplanned_downtime_hours
+        description: "Unplanned equipment downtime during production"
+        synonyms: ["downtime", "equipment downtime", "lost time"]
+
+  # Manufacturing facilities
+  - name: facilities
+    base_table:
+      database: manufacturing_db
+      schema: public
+      table: manufacturing_facilities
+    
+    dimensions:
+      - name: facility_id
+        expr: facility_id
+        description: "Unique identifier for manufacturing facility"
+        unique_identifier: true
+        synonyms: ["facility", "plant ID", "site ID"]
+        
+      - name: facility_name
+        expr: facility_name
+        description: "Name of manufacturing facility or plant"
+        synonyms: ["plant name", "facility", "manufacturing site"]
+        
+      - name: facility_type
+        expr: facility_type
+        description: "Type of facility: Assembly, Machining, Chemical, Packaging"
+        synonyms: ["plant type", "facility category"]
+        
+      - name: region
+        expr: geographic_region
+        description: "Geographic region where facility is located"
+        synonyms: ["region", "area", "geographic area"]
+        
+      - name: country
+        expr: country
+        description: "Country where facility is located"
+        synonyms: ["facility country", "location"]
+        
+    facts:
+      - name: capacity_units_per_day
+        expr: daily_production_capacity
+        description: "Maximum daily production capacity in units"
+        synonyms: ["capacity", "production capacity", "daily capacity"]
+        
+      - name: employee_count
+        expr: total_employees
+        description: "Number of employees working at this facility"
+        synonyms: ["headcount", "workforce", "employees"]
+
+# Define relationships between manufacturing entities
+relationships:
+  - name: production_orders_to_products
+    left_table: production_orders
+    right_table: products
+    join_columns:
+      - left_column: product_id
+        right_column: product_id
+    description: "Production orders manufacture specific finished products"
+
+  - name: production_orders_to_facilities
+    left_table: production_orders
+    right_table: facilities
+    join_columns:
+      - left_column: facility_id
+        right_column: facility_id
+    description: "Production orders are executed at specific manufacturing facilities"
+
+  - name: materials_to_suppliers
+    left_table: materials
+    right_table: suppliers
+    join_columns:
+      - left_column: supplier_id
+        right_column: supplier_id
+    description: "Materials are sourced from specific suppliers"
+
+# Pre-validated manufacturing and supply chain questions
+verified_queries:
+  # Production Performance
+  - question: "What's our production efficiency by facility?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many units did we produce this week?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our overall equipment effectiveness (OEE)?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show production output trends by month"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which production lines have the highest output?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Quality Management
+  - question: "What's our defect rate by product line?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which products have the highest quality issues?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show first-pass yield by facility"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our scrap rate this quarter?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which shifts have the best quality performance?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Supplier Performance
+  - question: "Which suppliers have the best on-time delivery?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show supplier quality ratings by category"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What are our longest lead times by supplier?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which suppliers consistently meet delivery schedules?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Inventory and Materials
+  - question: "Which materials are below reorder point?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our inventory turnover by material category?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show inventory levels by facility"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which materials have the highest carrying costs?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Operational Efficiency
+  - question: "What's our capacity utilization by facility?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show equipment downtime by production line"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our average setup time by product?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which facilities have the lowest downtime?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Cost Analysis
+  - question: "What are our manufacturing costs by product?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show cost variance analysis by facility"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which products have the highest profit margins?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "What's our labor cost per unit by shift?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Planning and Scheduling
+  - question: "What's our production schedule adherence rate?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "How many orders are behind schedule?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show demand forecast vs actual production"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  # Continuous Improvement
+  - question: "What are our productivity trends over the last year?"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Show improvement in defect rates by quarter"
+    verified_at: "2024-01-15T10:30:00Z"
+    
+  - question: "Which initiatives have delivered the best ROI?"
+    verified_at: "2024-01-15T10:30:00Z"
