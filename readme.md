@@ -6,7 +6,7 @@ Welcome to the comprehensive guide for Snowflake Cortex Analyst! This repository
 
 ## 🚀 Quick Start
 
-If you're new to Cortex Analyst, start with the [lab instructions](handsonlab.md) to build your first semantic model with festival data.
+If you're new to Cortex Analyst, start with the [lab instructions](./handsonlab.md) to build your first semantic model with festival data.
 
 ## 📚 Guide Structure
 
@@ -25,7 +25,7 @@ If you're new to Cortex Analyst, start with the [lab instructions](handsonlab.md
   - SaaS business model
 
 ### Hands-On Lab
-- **[Festival Data Lab](handsonlab.md)** - Interactive tutorial using music festival data
+- **[Festival Data Lab](./handsonlab.md)** - Interactive tutorial using music festival data
 
 ## 🎯 What You'll Learn
 
@@ -94,7 +94,7 @@ Each example includes:
 ## 🛠️ Getting Started Paths
 
 ### For Analysts & Business Users
-1. Complete the [Festival Data Lab](handsonlab.md)
+1. Complete the [Festival Data Lab](./handsonlab.md)
 2. Review [Best Practices](best-practices.md) for optimal usage
 3. Explore [Practical Examples](practical-examples.md) relevant to your industry
 
