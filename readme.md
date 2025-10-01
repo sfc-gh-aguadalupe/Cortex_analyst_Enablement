@@ -12,9 +12,7 @@ If you're new to Cortex Analyst, start with the [lab instructions](./handsonlab.
 
 ### Core Documentation
 - **[Best Practices](best-practices.md)** - Official recommendations for optimal Cortex Analyst usage
-- **[Practical Examples](practical-examples.md)** - Real-world implementations and code samples
-- **[Troubleshooting](troubleshooting.md)** - Common issues and step-by-step solutions
-- **[Advanced Features](advanced-features.md)** - Verified Query Repository, monitoring, and integrations
+- **[Monitoring](monitoring.md)** - Performance monitoring and observability guide
 
 ### Ready-to-Use templates
 - **[Semantic Model Examples](semantic-model-examples/)** - Complete YAML files for different industries
@@ -41,18 +39,6 @@ If you're new to Cortex Analyst, start with the [lab instructions](./handsonlab.
 - Team collaboration workflows
 - Model governance and version control
 
-### Advanced Features
-- **Verified Query Repository (VQR)** - Building a library of validated business queries
-- **Cortex Search Integration** - Improving literal string matching with semantic search
-- **Administrator Monitoring** - Tracking usage, performance, and model effectiveness
-- **Custom Instructions** - Fine-tuning model behavior for specific business contexts
-
-### Enterprise Implementation
-- Performance optimization strategies
-- Security and access control
-- Multi-environment deployment
-- API integration patterns
-
 ## 📊 Semantic Model Examples
 
 Our semantic model examples cover common business scenarios:
@@ -71,26 +57,6 @@ Each example includes:
 - Verified query examples
 - Integration patterns
 
-## 🔧 Key Features Covered
-
-### Core Cortex Analyst Capabilities
-- Natural language to SQL translation
-- Semantic layer abstraction
-- Business logic encapsulation
-- Multi-table relationship handling
-
-### Advanced Integrations
-- **Cortex Search Services** - Enhanced literal value matching
-- **Event Logging** - Request/response tracking and analysis
-- **Custom Instructions** - Model behavior customization
-- **Suggested Questions** - Guided user experience
-
-### Enterprise Features
-- Role-based access control
-- Query performance monitoring
-- Model versioning and deployment
-- API-based integrations
-
 ## 🛠️ Getting Started Paths
 
 ### For Analysts & Business Users
@@ -104,9 +70,10 @@ Each example includes:
 3. Follow [Best Practices](best-practices.md) for enterprise deployment
 
 ### For Administrators
-1. Set up [Administrator Monitoring](advanced-features.md#administrator-monitoring)
+1. Set up [Administrator Monitoring](monitoring.md) and performance tracking
 2. Implement [Cortex Search Integration](advanced-features.md#cortex-search-integration)
 3. Establish governance processes from [Best Practices](best-practices.md)
+4. Monitor and optimize using [Advanced Features](advanced-features.md)
 
 ## 📈 Success Metrics
 

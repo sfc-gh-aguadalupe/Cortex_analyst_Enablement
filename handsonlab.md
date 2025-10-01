@@ -1,4 +1,18 @@
 
+# Cortex Analyst Hands-On Lab
+
+## Table of Contents
+
+1. [Load Festival Data](#load-festival-data)
+2. [Create a Semantic Model](#create-a-semantic-model)
+   - [View the Results](#view-the-results)
+   - [Move Columns](#move-columns)
+   - [Test the Model](#test-the-model)
+   - [Define Table Relationships](#define-table-relationships)
+   - [Verify the Queries](#verify-the-queries)
+   - [Save the Model](#save-the-model)
+
+---
 
 ## Load Festival Data
 
