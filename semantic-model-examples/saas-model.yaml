@@ -5,54 +5,7 @@
 name: saas_analytics
 description: "Comprehensive SaaS business analytics model covering subscription management, user engagement, feature adoption, customer success, and revenue optimization"
 
-# SaaS business metrics and subscription economy rules
-custom_instructions: |
-  SaaS Business Metrics and Subscription Economy Rules:
-  
-  ## Revenue Recognition and Metrics
-  - Monthly Recurring Revenue (MRR) = sum of normalized monthly subscription values
-  - Annual Recurring Revenue (ARR) = MRR × 12
-  - Average Revenue Per User (ARPU) = total revenue / active subscribers
-  - Customer Lifetime Value (CLV) = average monthly revenue × gross margin / churn rate
-  - Revenue recognition follows subscription accounting standards
-  
-  ## Churn and Retention Analysis
-  - Churn rate = customers who cancelled / total customers at start of period
-  - Revenue churn includes both cancellations and downgrades
-  - Net Revenue Retention = (starting MRR + expansion - churn) / starting MRR
-  - Cohort analysis tracks customer behavior over time
-  - Voluntary vs involuntary churn tracked separately
-  
-  ## User Engagement and Product Metrics
-  - Daily Active Users (DAU) and Monthly Active Users (MAU)
-  - Feature adoption = users who used feature / total active users
-  - User onboarding completion rates by step
-  - Time to value = days from signup to first key action
-  - Product-qualified leads (PQL) based on usage patterns
-  
-  ## Customer Success and Health Scoring
-  - Customer health score combines usage, engagement, and support metrics
-  - Health categories: Healthy (80-100), At Risk (50-79), Critical (<50)
-  - Leading indicators include login frequency, feature usage, support tickets
-  - Customer success intervention triggers based on health score changes
-  
-  ## Subscription Management
-  - Plan types: Free Trial, Freemium, Starter, Professional, Enterprise
-  - Billing cycles: Monthly, Annual, Multi-year contracts
-  - Upgrades and downgrades tracked as expansion/contraction revenue
-  - Free trial conversion rates by source and user behavior
-  
-  ## Time Periods and Business Cycles
-  - SaaS metrics typically measured monthly and quarterly
-  - Customer anniversary dates important for retention analysis
-  - Seasonal patterns in B2B vs B2C markets
-  - End-of-quarter effects on sales and renewals
-  
-  ## Data Quality and User Privacy
-  - User activity data anonymized for analytics
-  - GDPR and privacy compliance for user data
-  - Exclude internal users and test accounts from metrics
-  - Real-time data for operational metrics, batch for reporting
+
 
 tables:
   # User accounts and profiles

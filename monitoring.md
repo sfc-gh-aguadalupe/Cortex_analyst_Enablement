@@ -138,18 +138,6 @@ For advanced analysis, you can query the raw event data in the `SNOWFLAKE.LOCAL.
 - Set up custom alerting rules
 - Integrate with enterprise monitoring platforms
 
-## Security Considerations
-
-### Data Privacy
-- Be aware of what data is logged
-- Ensure compliance with data privacy regulations
-- Consider data masking for sensitive information
-
-### Access Control
-- Regularly review who has access to monitoring data
-- Implement principle of least privilege
-- Monitor access to sensitive query data
-
 ## Next Steps
 
 1. **Set up monitoring** for your semantic models

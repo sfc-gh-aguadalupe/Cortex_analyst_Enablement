@@ -5,47 +5,6 @@
 name: healthcare_analytics
 description: "HIPAA-compliant healthcare analytics model for patient care analysis, provider performance, clinical outcomes, and operational efficiency while protecting patient privacy"
 
-# Healthcare-specific business rules and privacy requirements
-custom_instructions: |
-  Healthcare Analytics Business Rules and Privacy:
-  
-  ## Privacy and HIPAA Compliance
-  - All patient data must be aggregated (minimum 10 patients per group)
-  - Never display individual patient information
-  - Use age groups instead of specific ages: 0-17, 18-35, 36-55, 56-75, 75+
-  - Geographic data limited to state level or broader
-  - All patient identifiers are anonymized
-  
-  ## Clinical Context and Standards
-  - Primary diagnosis takes precedence over secondary diagnoses
-  - Include only completed visits for outcome analysis
-  - Emergency visits vs scheduled visits analyzed separately
-  - Readmission within 30 days considered quality indicator
-  - Length of stay calculations exclude same-day visits
-  
-  ## Quality and Outcome Metrics
-  - Patient satisfaction scores include response rate context
-  - Provider performance requires minimum 20 cases for significance
-  - Mortality rates adjusted for risk factors and case mix
-  - Infection rates follow CDC definitions and guidelines
-  
-  ## Financial and Operational Rules
-  - Cost analysis includes both direct and allocated costs
-  - Revenue recognition follows healthcare accounting standards
-  - Insurance reimbursement rates vary by payer and contract
-  - Charity care and bad debt handled separately
-  
-  ## Time Periods and Reporting
-  - Clinical reporting follows calendar year
-  - Quality measures often use rolling 12-month periods
-  - "Recent" refers to last 90 days for patient patterns
-  - Seasonal illness patterns require year-over-year comparisons
-  
-  ## Data Quality and Accuracy
-  - Only include visits with complete documentation
-  - Exclude test patients and training data
-  - Handle coding updates and ICD version changes
-  - Ensure provider credentials and licenses are current
 
 tables:
   # Patient demographics (anonymized and aggregated)

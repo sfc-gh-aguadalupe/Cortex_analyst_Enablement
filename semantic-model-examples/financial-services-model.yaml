@@ -5,45 +5,6 @@
 name: banking_analytics
 description: "Comprehensive banking and financial services analytics model covering customer relationships, account management, transaction analysis, and regulatory reporting"
 
-# Financial services business context and compliance rules
-custom_instructions: |
-  Financial Services Business Rules and Compliance:
-  
-  ## Regulatory Context
-  - All financial calculations must comply with banking regulations
-  - Customer data handling follows KYC (Know Your Customer) requirements
-  - Risk assessments use standardized Basel III frameworks
-  - Interest calculations follow standard banking conventions
-  
-  ## Financial Calculations
-  - Interest earned = average daily balance × annual interest rate / 365
-  - Fee income excludes regulatory-mandated refunds
-  - Net interest margin = (interest income - interest expense) / average earning assets
-  - Loan loss provisions follow CECL (Current Expected Credit Loss) standards
-  
-  ## Customer Classification
-  - Retail customers: Individual banking customers
-  - Commercial customers: Business banking relationships
-  - Private banking: High net worth individuals (>$1M assets)
-  - Institutional: Corporate and government entities
-  
-  ## Risk Management
-  - Credit risk scores: 300-850 scale (higher = lower risk)
-  - Risk categories: Low (750+), Medium (600-749), High (<600)
-  - Regulatory capital ratios must meet minimum requirements
-  - Stress testing scenarios included in analysis
-  
-  ## Time Periods and Reporting
-  - Fiscal year aligns with calendar year
-  - Quarterly regulatory reporting deadlines
-  - Monthly management reporting cycles
-  - Daily liquidity and risk monitoring
-  
-  ## Data Quality and Security
-  - All customer data anonymized for analytics
-  - Transaction amounts rounded to nearest cent
-  - Exclude test/training transactions
-  - Audit trail maintained for all calculations
 
 tables:
   # Customer relationship table

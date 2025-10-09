@@ -61,19 +61,15 @@ Each example includes:
 
 ### For Analysts & Business Users
 1. Complete the [Festival Data Lab](./handsonlab.md)
-2. Review [Best Practices](best-practices.md) for optimal usage
-3. Explore [Practical Examples](practical-examples.md) relevant to your industry
+
 
 ### For Data Engineers
 1. Study [Semantic Model Examples](semantic-model-examples/) for your domain
-2. Implement [Advanced Features](advanced-features.md) like VQR and monitoring
 3. Follow [Best Practices](best-practices.md) for enterprise deployment
 
 ### For Administrators
 1. Set up [Administrator Monitoring](monitoring.md) and performance tracking
-2. Implement [Cortex Search Integration](advanced-features.md#cortex-search-integration)
-3. Establish governance processes from [Best Practices](best-practices.md)
-4. Monitor and optimize using [Advanced Features](advanced-features.md)
+
 
 ## 📈 Success Metrics
 

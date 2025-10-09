@@ -5,51 +5,6 @@
 name: manufacturing_analytics
 description: "Comprehensive manufacturing and supply chain analytics model covering production efficiency, quality metrics, supplier performance, and operational optimization"
 
-# Manufacturing business rules and operational context
-custom_instructions: |
-  Manufacturing and Supply Chain Business Rules:
-  
-  ## Production Standards and Metrics
-  - Production efficiency = (actual output / planned output) × 100
-  - Overall Equipment Effectiveness (OEE) = availability × performance × quality
-  - Cycle time includes setup, processing, and teardown
-  - Downtime categories: Planned (maintenance) vs Unplanned (breakdowns)
-  - First-pass yield = units passing quality on first attempt / total units
-  
-  ## Quality Management
-  - Defect rate = defective units / total units produced × 100
-  - Six Sigma quality targets: <3.4 defects per million opportunities
-  - Quality costs include prevention, appraisal, and failure costs
-  - Critical quality characteristics tracked per product specification
-  - Root cause analysis required for major quality incidents
-  
-  ## Supply Chain Operations
-  - Lead time = order placement to receipt at facility
-  - Supplier performance includes quality, delivery, and service metrics
-  - Safety stock levels based on demand variability and lead time
-  - Just-in-time principles minimize inventory carrying costs
-  - Supplier scorecards updated monthly with performance metrics
-  
-  ## Cost Management
-  - Standard cost includes material, labor, and overhead allocation
-  - Variance analysis compares actual vs standard costs
-  - Activity-based costing for accurate product profitability
-  - Scrap and rework costs tracked separately from standard costs
-  - Energy costs allocated based on machine utilization
-  
-  ## Time Periods and Scheduling
-  - Production schedules based on customer demand forecasts
-  - Shift patterns: 1st (6AM-2PM), 2nd (2PM-10PM), 3rd (10PM-6AM)
-  - Maintenance windows scheduled during planned downtime
-  - Seasonal demand patterns affect production planning
-  - Continuous improvement measured quarterly
-  
-  ## Safety and Compliance
-  - Safety incidents categorized by severity and type
-  - Environmental compliance tracked for emissions and waste
-  - Regulatory requirements vary by product and market
-  - Audit trails maintained for quality and compliance
-  - Training records linked to production authorization
 
 tables:
   # Supplier master data

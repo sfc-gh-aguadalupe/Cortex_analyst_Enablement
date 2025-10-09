@@ -5,38 +5,6 @@
 name: ecommerce_analytics
 description: "Complete e-commerce analytics model covering customer behavior, product performance, sales trends, and business intelligence for online retail operations"
 
-# Business context and calculation rules
-custom_instructions: |
-  E-commerce Business Rules and Context:
-  
-  ## Financial Calculations
-  - Revenue includes order total, tax, and shipping fees
-  - Profit margin = (revenue - cost_of_goods_sold) / revenue * 100
-  - Average Order Value (AOV) = total revenue / number of orders
-  - Customer Lifetime Value = total customer spend / customer tenure in months
-  
-  ## Customer Segmentation
-  - Premium customers: Annual spend > $5,000
-  - Standard customers: Annual spend $1,000 - $5,000  
-  - Basic customers: Annual spend < $1,000
-  - New customers: Registered within last 90 days
-  
-  ## Time Periods and Seasonality
-  - Business operates in EST timezone
-  - Peak seasons: November-December (holiday), June-August (summer)
-  - "Recent" refers to last 30 days unless specified
-  - Weekend vs weekday patterns should be considered separately
-  
-  ## Product Analysis
-  - Focus on shipped orders for revenue metrics
-  - Include cancelled orders in conversion analysis
-  - Bundle products analyzed both as bundles and individual items
-  - Seasonal products require year-over-year comparisons
-  
-  ## Data Quality Rules
-  - Exclude test orders (is_test = false)
-  - Include refunds as negative revenue
-  - Only completed orders count toward customer metrics
 
 tables:
   # Customer dimension table
