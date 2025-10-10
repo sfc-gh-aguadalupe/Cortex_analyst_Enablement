@@ -1,0 +1,2388 @@
+name: SV_AT_KAI_SEMANTIC_VIEW
+description: |
+  Semantic model for the b2c and buget tables used by the Austrian market.
+tables:
+  - name: DIM_CALENDAR
+    synonyms:
+      - calendar
+    description: |
+      The calendar table is a dimension table that contains details about the business calendar,  such as the date, month, year, week number, and whether the date falls a weekend or not.  It is used to provide date context to analysis. Join this table with any other table  containing a date to enable time period aggregations.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_CALENDAR
+    dimensions:
+      - name: DATE_KEY
+        synonyms:
+          - day key
+        description: Unique identifier for each date.
+        expr: DATE_KEY
+        data_type: NUMBER(38,0)
+        unique: true
+        sample_values:
+          - '20170101'
+          - '20250625'
+          - '20401226'
+      - name: DAY_OF_MONTH_NUMBER
+        synonyms:
+          - day number
+          - day of month
+          - day of the month
+        description: Number between 1 and 31 that represents the day part of a date.
+        expr: DAY_OF_MONTH_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '15'
+          - '30'
+      - name: DAY_OF_WEEK_NUMBER
+        description: |
+          Numerical representation of the day number in the week with Mondays corresponding to 1 and  Sundays to 7.
+        expr: DAY_OF_WEEK_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+      - name: DAY_OF_YEAR_NUMBER
+        description: Number between 1 and 366 that represents day number in the year for a given date.
+        expr: DAY_OF_YEAR_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '256'
+          - '365'
+      - name: FULL_DAY_NAME
+        synonyms:
+          - day full name
+          - day long name
+          - day name
+          - full day name
+          - long day name
+          - long day of week
+          - week day full name
+          - week day name
+        description: Long name for the week day corresponding to the date.
+        expr: FULL_DAY_NAME
+        data_type: VARCHAR(9) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Monday
+          - Tuesday
+          - Wednesday
+          - Thursday
+          - Friday
+          - Saturday
+          - Sunday
+      - name: FULL_MONTH_NAME
+        synonyms:
+          - long month name
+          - month name
+          - name of month
+        description: Name of the month in long format.
+        expr: FULL_MONTH_NAME
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - January
+          - February
+          - March
+          - April
+          - May
+          - June
+          - July
+          - August
+          - September
+          - October
+          - November
+          - December
+      - name: IS_WEEKEND
+        description: |
+          Boolean field indicating is a date falls on week or weekend days. Value 0 indicates a week day and value 1 indicates a weekend day.
+        expr: IS_WEEKEND
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '0'
+          - '1'
+      - name: MONTH_NUMBER
+        synonyms:
+          - number of the month
+        description: Number between 1 and 12 that represents the month in the year for a given date.
+        expr: MONTH_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+          - '5'
+          - '6'
+          - '7'
+          - '8'
+          - '9'
+          - '10'
+          - '11'
+          - '12'
+      - name: QUARTER_NAME
+        synonyms:
+          - name of quarter
+        description: |
+          String containing the name of the quarter.  It is composed by the number of the quarter with a Q prefix.
+        expr: QUARTER_NAME
+        data_type: VARCHAR(2) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Q1
+          - Q2
+          - Q3
+          - Q4
+      - name: QUARTER_NUMBER
+        synonyms:
+          - number of quarter
+        description: Number between 1 and 4 representing the number of the quarter on which a date falls.
+        expr: QUARTER_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+          - '4'
+      - name: SHORT_DAY_NAME
+        synonyms:
+          - day short name
+          - short day name
+          - week day short name
+          - week short day name
+        description: Short name for the week day corresponding to the date.
+        expr: DAY_NAME
+        data_type: VARCHAR(3) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Mon
+          - Tue
+          - Wed
+          - Thu
+          - Fri
+          - Sat
+          - Sun
+      - name: SHORT_MONTH_NAME
+        synonyms:
+          - short name of month
+        description: Name of the month in short format with first three letters.
+        expr: MONTH_NAME
+        data_type: VARCHAR(3) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Jan
+          - Feb
+          - Mar
+          - Apr
+          - May
+          - Jun
+          - Jul
+          - Aug
+          - Sep
+          - Oct
+          - Nov
+          - Dec
+      - name: WEEK_NAME
+        description: |
+          String containing the name of the week.  It is composed by the number of the week in the year with a W prefix.
+        expr: WEEK_NAME
+        data_type: VARCHAR(3) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - W01
+          - W09
+          - W24
+          - W52
+      - name: WEEK_NUMBER
+        synonyms:
+          - number of week
+        description: Number between 1 and 53 representing the week number in the year for a given date.
+        expr: WEEK_OF_YEAR_NO
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '9'
+          - '24'
+          - '52'
+      - name: YEAR
+        description: Numerical representation of the year corresponding to a date.
+        expr: YEAR
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '2017'
+          - '2024'
+          - '2025'
+          - '2026'
+          - '2040'
+    time_dimensions:
+      - name: DATE
+        synonyms:
+          - day
+        description: String representing the date in YEAR-MONTH-DAY format.
+        expr: DATE
+        data_type: DATE
+        sample_values:
+          - '2017-01-01'
+          - '2025-05-25'
+          - '2040-12-26'
+    filters:
+      - name: first_quarter
+        synonyms:
+          - Q1
+          - quarter one
+        description: Filters data so that only records corresponding to the first quarter of the year are returned.
+        expr: QUARTER_NO = 1
+      - name: fourth_quarter
+        synonyms:
+          - Q4
+          - quarter four
+        description: Filters data so that only records corresponding to the fourth quarter of the year are returned.
+        expr: QUARTER_NO = 4
+      - name: second_quarter
+        synonyms:
+          - Q2
+          - quarter two
+        description: Filters data so that only records corresponding to the second quarter of the year are returned.
+        expr: QUARTER_NO = 2
+      - name: third_quarter
+        synonyms:
+          - Q3
+          - quarter three
+        description: Filters data so that only records corresponding to the third quarter of the year are returned.
+        expr: QUARTER_NO = 3
+      - name: week_days
+        description: Filters data so that only week days are returned.
+        expr: IS_WEEKEND = 0
+      - name: weekend_days
+        synonyms:
+          - week business days
+        description: Filters data so that only weekend days are returned.
+        expr: IS_WEEKEND = 1
+    primary_key:
+      columns:
+        - DATE_KEY
+  - name: DIM_CHANNEL
+    synonyms:
+      - channel
+    description: The DIM_CHANNEL table is a dimension table that provides context on the different channels, subchannels and the business type that they map to.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_CHANNEL
+    dimensions:
+      - name: BUSINESS_TYPE
+        synonyms:
+          - type of business
+        description: String describing the type of business of the channel.
+        expr: BUSINESS_TYPE
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - ALL
+          - B2B
+          - B2C
+      - name: CHANNEL_DESCRIPTION
+        synonyms:
+          - channel
+          - channel name
+          - description of channel
+          - name of channel
+        description: String describing the channel.
+        expr: CHANNEL_DESCRIPTION
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Unknown
+          - Budget
+          - CSC
+          - Direct Retail
+          - Indirect Retail
+          - Hospitality and new business
+      - name: HK_H_CHANNEL_ID
+        synonyms:
+          - channel id
+          - channel key
+          - id of channel
+          - id of subchannel
+          - subchannel id
+          - subchannel key
+        description: Primary key for the channel and subchannel combination.
+        expr: HK_H_CHANNEL_ID
+        data_type: NUMBER(38,0)
+        unique: true
+        sample_values:
+          - '-1'
+          - '0'
+          - '5'
+          - '14'
+      - name: SUBCHANNEL_DESCRIPTION
+        synonyms:
+          - description of subchannel
+          - name of subchannel
+          - sub channel
+          - subchannel
+          - subchannel name
+        description: String describing the subchannel
+        expr: SUBCHANNEL_DESCRIPTION
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - Unknown
+          - Customer Service Center
+          - Boutique
+          - Premium Reseller
+          - Premium Reseller+
+    primary_key:
+      columns:
+        - HK_H_CHANNEL_ID
+    unique_keys:
+      - columns:
+          - SUBCHANNEL_DESCRIPTION
+  - name: DIM_CONSUMER
+    synonyms:
+      - consumer
+    description: 'This table stores data regarding consumers of P1 (IQOS) products. '
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_CONSUMER
+    dimensions:
+      - name: AGE
+        synonyms:
+          - age_in_years
+          - age_value
+          - birth_age
+          - years_of_age
+          - years_old
+        description: The age of the consumer in years.
+        expr: AGE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '26'
+          - '45'
+      - name: CONSUMER_ID
+        synonyms:
+          - dcx_customer_id
+        description: Consumer id in DCX system.
+        expr: CONSUMER_ID
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - ef2024ecba5043ccb46838a260c3b8ac
+          - 7a4e7461ef794793a94805b3c512737a
+          - ea52120693f44deaa4780d7233f9b1e3
+      - name: CONSUMER_ID_GODFATHER
+        synonyms:
+          - parent_consumer_id
+          - patron_id
+          - sponsor_id
+          - supervising_consumer_id
+        description: Unique identifier of the consumer's godfather, representing the original referrer or parent in the consumer hierarchy.
+        expr: CONSUMER_ID_GODFATHER
+        data_type: VARCHAR(36) COLLATE 'en-ci'
+        sample_values:
+          - 08c49642393b4804b072be6fcb3caedb
+          - 0000557e59bd43769d6398c533291323
+          - '-1'
+      - name: CONSUMER_TYPE_CODE
+        synonyms:
+          - consumer_category_code
+          - consumer_classification_code
+          - customer_type_code
+        description: A code that categorizes the type of consumer, where K represents a known consumer and A represents an anonymous consumer, generally created by the MSCE coach as a tracking tool
+        expr: CONSUMER_TYPE_CODE
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - K
+          - A
+        is_enum: true
+      - name: DEVICE_LINKED_FLAG
+        synonyms:
+          - device_associated
+          - device_connected
+          - device_linked_status
+          - is_device_linked
+          - linked_device_indicator
+        description: Indicates whether a consumer has a device linked to their account.
+        expr: DEVICE_LINKED_FLAG
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - 'true'
+          - 'false'
+        is_enum: true
+      - name: EMAIL_COMM_OPT_IN
+        synonyms:
+          - email_advertisement_consent
+          - email_marketing_permission
+          - email_notification_preference
+          - email_promotion_opt_in
+          - email_subscription_status
+        description: Indicates whether the consumer has opted-in to receive email communications from the company.
+        expr: EMAIL_COMM_OPT_IN
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 'true'
+          - 'false'
+      - name: GENDER_CODE
+        synonyms:
+          - demographic_gender
+          - gender_category
+          - gender_identifier
+          - gender_type
+          - sex_code
+        description: 'The GENDER_CODE dimension represents the gender of a consumer, with possible values being: X (Unknown/Not Specified), U (Undisclosed), M (Male), and F (Female).'
+        expr: GENDER_CODE
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - X
+          - U
+          - M
+          - F
+        is_enum: true
+      - name: HAV_STATUS
+        synonyms:
+          - age validation status
+        description: The HAV_STATUS column represents the current status of the consumer's Hard Age Verification (HAV) process, indicating whether the verification is still in progress or has not been verified.
+        expr: HAV_STATUS
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - IN_PROGRESS
+          - NOT_VERIFIED
+        is_enum: true
+      - name: HK_H_CHANNEL_ID
+        synonyms:
+          - channel_code
+          - channel_id
+          - channel_identifier
+          - channel_key
+          - distribution_channel_id
+        description: Foreign key to the DIM_CHANNEL table. -1 refers to unknown channels.
+        expr: HK_H_CHANNEL_ID
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '-1'
+          - '1'
+          - '2'
+        is_enum: true
+      - name: HK_H_CONSUMER
+        synonyms:
+          - consumer id
+          - consumer_hash_key
+          - consumer_key
+          - consumer_unique_identifier
+          - unique_consumer_id
+        description: Unique identifier for a consumer.
+        expr: HK_H_CONSUMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - ef2024ecba5043ccb46838a260c3b8ac
+          - 7a4e7461ef794793a94805b3c512737a
+          - ea52120693f44deaa4780d7233f9b1e3
+      - name: HK_H_CONSUMER_GODFATHER
+        synonyms:
+          - consumer_sponsor_id
+          - godfather
+          - godfather id
+        description: 'Unique identifier for the consumer''s godfather, which is the consumer that provided a referral. '
+        expr: HK_H_CONSUMER_GODFATHER
+        data_type: VARCHAR(36) COLLATE 'en-ci'
+        sample_values:
+          - 08c49642393b4804b072be6fcb3caedb
+          - 0000557e59bd43769d6398c533291323
+          - '-1'
+      - name: HK_H_CUSTOMER
+        synonyms:
+          - account_hash
+          - customer_hash_key
+          - customer_id
+          - customer_key
+          - customer_reference
+        description: Foreign key to the DIM_CUSTOMER table
+        expr: HK_H_CUSTOMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - '-1'
+          - f941f2c3f5874546ba4fa4ed7e7bea89
+          - a70fec947ea857106f4eeff1b47d9641
+      - name: HK_H_USER
+        synonyms:
+          - user_hash
+          - user_id
+          - user_identifier
+          - user_key
+          - username
+        description: Unique identifier to the device user.
+        expr: HK_H_USER
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - '-1'
+          - 005aV00000ApErBQAV
+          - 005aV00000AESrWQAX
+      - name: HOME_COUNTRY_CODE
+        synonyms:
+          - country_of_origin
+          - country_of_residence
+          - home_country_id
+          - home_nation_code
+          - nationality_code
+          - native_country_code
+        description: The country where the consumer's home is located represented by two letters. Most of the records will have the value "AT" for Austria.
+        expr: HOME_COUNTRY_CODE
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - AT
+          - DE
+          - GB
+      - name: IS_CONTACTABLE
+        synonyms:
+          - contactable
+        description: Defines whether a consumer can be contacted or not. This is a boolean field, with 1 meaning customer is contactable.
+        expr: IS_CONTACTABLE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '1'
+          - '0'
+        is_enum: true
+      - name: IS_MCSE
+        synonyms:
+          - coach.
+          - IQOS coach
+        description: Indicates whether the consumer is a IQOS coach. Boolean field.
+        expr: IS_MCSE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '0'
+          - '1'
+        is_enum: true
+      - name: LAST_ACTIVITY_CHANNEL
+        synonyms:
+          - last_activity_medium
+          - last_channel_used
+          - last_engagement_channel
+          - last_interaction_channel
+          - last_touchpoint_channel
+        description: The channel through which the consumer last interacted with the company, such as Email, Customer Service Center (CSC), or an indirect retail sales representative.
+        expr: LAST_ACTIVITY_CHANNEL
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CSC
+          - INDIRECTRETAILSR
+          - EMAIL
+        is_enum: true
+      - name: MARKETING_OPT_IN
+        synonyms:
+          - advertising_agreement
+          - marketing_consent
+          - marketing_permission
+          - marketing_subscription
+          - promotional_opt_in
+        description: Indicates whether the consumer has opted-in to receive marketing communications.
+        expr: MARKETING_OPT_IN
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 'true'
+          - 'false'
+      - name: MGM_CODE
+        synonyms:
+          - mgm_identifier
+          - mgm_key
+          - mgm_label
+          - mgm_reference
+          - mgm_tag
+        description: 'Unique identifier for a consumer in the MGM (Member Get Member) program. It represents a voucher code that the consumer can provide other consumers so that both get a reward during registration. '
+        expr: MGM_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - FREUND-505190
+          - FREUND-721405
+          - FREUND-395235
+      - name: PROFILE_VERIFIED
+        synonyms:
+          - authenticated_profile
+          - confirmed_identity
+          - trusted_user
+          - validated_account
+          - verified_profile
+        description: Indicates whether the consumer's email has been verified through double verification, with 'true' indicating verification and 'false' indicating no verification.
+        expr: PROFILE_VERIFIED
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 'true'
+          - 'false'
+        is_enum: true
+      - name: PROFILING_OPT_IN
+        synonyms:
+          - data_collection_agreement
+          - data_sharing_consent
+          - information_sharing_opt_in
+          - personalization_consent
+          - profiling_permission
+        description: Indicates whether the consumer has opted in to allow their data to be used for profiling purposes.
+        expr: PROFILING_OPT_IN
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 'true'
+          - 'false'
+      - name: REGISTRATION_DATE_KEY
+        synonyms:
+          - account_creation_key
+          - enrollment_date_id
+          - join_date_identifier
+          - registration_key
+          - signup_date_code
+        description: Foreign key to the DIM_CALENDAR table.
+        expr: REGISTRATION_DATE_KEY
+        data_type: NUMBER(8,0)
+        sample_values:
+          - '20250617'
+          - '20250514'
+          - '20250513'
+      - name: REGISTRATION_PRIVACY_POLICY_ACCEPTANCE
+        synonyms:
+          - data_protection_acknowledgement
+          - privacy_agreement_status
+          - privacy_policy_agreement
+          - registration_terms_acceptance
+          - terms_and_conditions_acceptance
+        description: Indicates whether the consumer has accepted the registration privacy policy.
+        expr: REGISTRATION_PRIVACY_POLICY_ACCEPTANCE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 'false'
+          - 'true'
+        is_enum: true
+      - name: REGISTRATION_SOURCE
+        synonyms:
+          - origin_of_registration
+          - registration_channel
+          - registration_medium
+          - registration_origin
+          - source_of_registration
+        description: The source through which a consumer initially registered with the company, such as through the company's website, CCR, or CLT
+        expr: REGISTRATION_SOURCE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CCR
+          - RAAS_REG
+          - WEBSITE
+    time_dimensions:
+      - name: LAST_ACTIVITY_DATE
+        synonyms:
+          - last_engagement_date
+          - last_interaction_date
+          - last_user_activity
+          - latest_activity_timestamp
+          - most_recent_activity
+        description: The date of the consumer's most recent activity or interaction with the platform.
+        expr: LAST_ACTIVITY_DATE
+        data_type: DATE
+        sample_values:
+          - '2025-03-26'
+          - '2025-03-18'
+      - name: LAST_LOGIN_DATETIME
+        synonyms:
+          - last_access_time
+          - last_account_login
+          - last_session_start
+          - last_sign_in
+          - last_user_login
+          - most_recent_login
+        description: The date and time when the consumer last logged in to the system.
+        expr: LAST_LOGIN_DATETIME
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - 2021-07-05T17:19:58.000+0000
+          - 2021-07-05T17:20:30.000+0000
+          - 2021-07-06T16:09:21.000+0000
+    primary_key:
+      columns:
+        - HK_H_CONSUMER
+  - name: DIM_CUSTOMER
+    synonyms:
+      - customer
+    description: |
+      The customer table is a dimensions table that provides context on the B2B customers.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_CUSTOMER
+    dimensions:
+      - name: CUSTOMER_NAME
+        synonyms:
+          - name of customer
+          - name of the customer
+        description: Business name of the customer.
+        expr: CUSTOMER_NAME
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Gabriele Degenfellner
+          - SPAR Österreichische Warenhandels A
+          - Alois Schramm OG
+      - name: CUSTOMER_TYPE
+        synonyms:
+          - type of customer
+        description: Defines the type of customer related to its discount type.
+        expr: CUSTOMER_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - TRAFIK - TVS
+          - TRAFIK - TFG
+          - N/A
+      - name: HK_H_B2B_TERRITORY
+        synonyms:
+          - id of territory
+          - territory id
+          - territory key
+        description: Foreign key from the territory table
+        expr: HK_H_B2B_TERRITORY
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - 394dc2138f6fc5c7732db3a3fcd3a643
+          - cfac9916261ad32f7d346b31d6ee6999
+          - 7ecd685a22e6e797e97766d0f4493c7f
+      - name: HK_H_CUSTOMER
+        synonyms:
+          - customer id
+          - customer key
+          - id of the customer
+        description: Primary key for the customer. Typically a hashed value.
+        expr: HK_H_CUSTOMER
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - b531dcc6087fb71612bf5f44d6b96635
+          - b40c386ace4405985b69864cb4f0a9af
+      - name: INTERNAL_COMPANY_CODE
+        synonyms:
+          - company internal code
+        description: Internal code for the customer company
+        expr: INTERNAL_COMPANY_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '98210001'
+          - AT10
+          - '615885'
+      - name: REEV_ACCOUNT_TYPE
+        synonyms:
+          - account type in reev
+        description: Customer account type classification in REEV system
+        expr: REEV_ACCOUNT_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - General Trade Retail
+      - name: REEV_BILLING_COUNTRY
+        synonyms:
+          - billing state in reev system
+        description: Customer billing country extracted from the REEV system
+        expr: REEV_BILLING_COUNTRY
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Austria
+      - name: REEV_BILLING_LATITUDE
+        synonyms:
+          - latitude
+        description: customer billing address latitude coordinates extracted from the REEV system.
+        expr: REEV_BILLING_LATITUDE
+        data_type: FLOAT
+        sample_values:
+          - '46.767371188'
+          - '47.846574'
+          - '48.2159171'
+      - name: REEV_BILLING_LONGITUDE
+        synonyms:
+          - longitude
+        description: customer billing address longitude coordinates extracted from the REEV system.
+        expr: REEV_BILLING_LONGITUDE
+        data_type: FLOAT
+        sample_values:
+          - '9.7193355'
+          - '12.5657384'
+          - '14.4810122'
+          - '16.3983445'
+      - name: REEV_BILLING_POSTAL_CODE
+        synonyms:
+          - billing postal code in reev
+        description: Customer billing postal code extracted from the REEV system
+        expr: REEV_BILLING_POSTAL_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '1140'
+          - '3851'
+          - '8190'
+      - name: REEV_CUSTOMER_STATUS
+        synonyms:
+          - status of customer in reev
+        description: |
+          String that defines the current status of the customer in the REEV system.  Can take two values, Active or Inactive
+        expr: REEV_CUSTOMER_DTE_STATUS
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Active
+          - Inactive
+      - name: REEV_PHONE_NUMBER
+        synonyms:
+          - phone number
+        description: Customer phone number in REEV system
+        expr: REEV_FLEX_PARAMETER7
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 436769534358
+          - 436649240114
+          - 4317131728
+      - name: REEV_TERRITORY_CODE
+        synonyms:
+          - reev territory id
+          - territory code in reev
+          - territory id in reev
+        description: Code corresponding to the territory in reev system.
+        expr: REEV_TERRITORY_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - AT_203
+          - AT_305
+          - AT_305
+      - name: REEV_TRADE_CATEGORY
+        synonyms:
+          - trade category
+          - trade category in reev
+        description: Customer trade category classification in REEV system.
+        expr: REEV_TRADE_CATEGORY
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Tobacconist
+          - HoReCaDi
+      - name: REEV_TRADE_CHANNEL
+        synonyms:
+          - trade channel
+          - trade channel in reev
+        description: Customer channel category classification in REEV system
+        expr: REEV_TRADE_CHANNEL
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - General Trade
+      - name: SAP_CUSTOMER_STATUS
+        synonyms:
+          - customer status in sap
+          - customer_status
+          - status of customer
+        description: |
+          String that defines the current status of the customer in the SAP system.  Can take two values, Active or Inactive.
+        expr: CUSTOMER_STATUS
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Active
+          - Inactive
+    primary_key:
+      columns:
+        - HK_H_CUSTOMER
+  - name: DIM_PRODUCT
+    synonyms:
+      - product
+    description: |
+      The product table is a dimensions table that provides context on the PMI products sold in Austria, such as their platform and category. 
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_PRODUCT
+    dimensions:
+      - name: BRAND_FAMILY
+        synonyms:
+          - brand
+          - brand family description
+        description: Brand family to which the product belongs to.
+        expr: BRAND_FAMILY_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - VEEV INPRIME
+          - IQOS ILUMA I
+          - HEETS
+          - CHESTERFIELD
+      - name: BRAND_SEGMENT
+        synonyms:
+          - segment
+        description: Segment of the brand the product belongs to.
+        expr: BRAND_SEGMENT
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - BONDS 1
+          - L&M 20
+          - IQOS 4
+          - ZYN 21
+          - UNDEFINED 1
+      - name: DEVICE_VERSION
+        synonyms:
+          - device model
+          - device version description
+          - device version name
+        description: Name of the device the product relates to.
+        expr: DEVICE_VERSION_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - ILUMA i PRIME
+          - P4 TPM GC1
+          - ILUMA PRIME
+          - Ariane 1.5
+      - name: DEVICE_VERSION_CODE
+        synonyms:
+          - device model code
+        description: Code identifying the version of the device that the product relates to.
+        expr: DEVICE_VERSION_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - TP15VOU
+          - D06
+          - 3.0M
+          - ILUMAI
+      - name: EAN_PER_CARTON
+        synonyms:
+          - product carton ean
+        description: EAN of product when sold by carton.
+        expr: EAN_PER_CARTON
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '9041200002235'
+          - '9041200005595'
+          - '5060185045666'
+          - '7311250134197'
+      - name: EAN_PER_CASE
+        synonyms:
+          - product case ean
+        description: EAN of product when sold by case.
+        expr: EAN_PER_CASE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '5410706955057'
+          - '7622100806547'
+          - '8724800010213'
+          - '9041200000385'
+      - name: EAN_PER_PACK
+        synonyms:
+          - product pack ean
+        description: EAN of product when sold by package.
+        expr: EAN_PER_PACK
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '9041200002822'
+          - '90412400'
+          - '8595234371559'
+          - '5704420020963'
+      - name: HK_H_FINISHED_PRODUCT
+        synonyms:
+          - finished product key
+          - hk_h_finished_product
+          - id of the finished product
+        description: unique identifier of the finished product that the product relates to.
+        expr: HK_H_FINISHED_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - b86c676e4e10636194dabfab004bdfc9
+          - 48d1b227f1511439c2c8389296845db2
+      - name: HK_H_PRODUCT
+        synonyms:
+          - id of product
+          - key of product
+          - product id
+          - product key
+        description: Primary key for the product table. Typically a hash value that represents a unique product.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - 6588cad3d5fd4e89f7f5039a54243f9f
+          - f161a51605fa8f1d70ea12571891445c
+      - name: ITEMS_PER_BUNDLE
+        synonyms:
+          - item count by bundle
+          - items in a bundle
+          - items in each bundle
+        description: Numerical field representing how many items of the product are contained in each bundle.
+        expr: ITEM_PER_BUNDLE_COUNT
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '10'
+          - '100'
+          - '200'
+          - '6300'
+      - name: ITEMS_PER_CASE
+        synonyms:
+          - item count by case
+          - items in a case
+          - items in each case
+        description: Numerical field representing how many items of the product are contained in each case.
+        expr: ITEM_PER_CASE_COUNT
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '300'
+          - '4800'
+          - '6400'
+          - '37800'
+      - name: ITEMS_PER_PACK
+        synonyms:
+          - item count by pack
+          - items in a pack
+          - items in each pack
+        description: Numerical field representing how many items of the product are contained in each pack.
+        expr: ITEM_PER_PACK_COUNT
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '2'
+          - '20'
+      - name: PACK_TYPE
+        synonyms:
+          - pack type description
+        description: Description of the package type used by the product.
+        expr: PACK_TYPE_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - HINGE LID BOX
+          - POUCH PACK
+          - Z-LIGHTER PACK
+          - UNIVERSAL BLANK BOX
+      - name: PLATFORM
+        synonyms:
+          - plaform description
+          - platform name
+        description: Name of the platform the product belongs to.
+        expr: PLATFORM_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - P1
+          - P4
+          - P5
+          - OTP
+          - Cigarettes
+          - Other
+      - name: PLATFORM_GROUP
+        synonyms:
+          - name of platform group
+          - platform group description
+          - platform group name
+        description: |
+          Name of the plaform group that the product belongs to.  The platform group refers to whether the product is a smoke free or a combustible tobacco product.
+        expr: PLATFORM_GROUP_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Smoke Free Products
+          - Combustible Tobacco
+      - name: PLATFORM_SUB_GROUP
+        synonyms:
+          - name of sub group
+          - platform subgroup description
+          - platform subgroup name
+        description: |
+          Name of the plaform subgroup that the product belongs to.  The platform subgroup refers to whether, for example, the product  refers to a consumable or a device or accessory.
+        expr: PLATFORM_SUB_GROUP_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Consumables
+          - Devices-Accessories
+          - Other
+      - name: PRODUCT_CATEGORY_GROUP
+        synonyms:
+          - product category group description
+          - product category group name
+        description: Name of the product category group.
+        expr: PRODUCT_CATEGORY_GROUP_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Accessories
+          - Chewing Tobacco
+          - Moist Snuff
+          - NCP
+          - NCP Main Kit
+          - Tobacco Bits
+      - name: PRODUCT_DESCRIPTION
+        synonyms:
+          - description of product
+          - full product description
+          - product
+          - product name
+        description: Full description of the product, including its brand, flavor, package, etc.
+        expr: PRODUCT_DESCRIPTION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - VEEV INPRIME BRIGHT CLASSIC 1.8% BOX 2
+          - BLENDS RICH CLASSICS S50 PRI 20 SLI
+          - KIT VEEV ONE PERSPECTIVES SE GREEN
+          - CHESTERFIELD ORANGE (5.0) KS BOB 24
+          - KIT LIL FLEX EZ SPECKLE BLUE
+          - MARLBORO GOLD TITANIUM EDITION KS BOX 20
+      - name: PRODUCT_GROUP_CODE
+        synonyms:
+          - group of product
+          - product_group
+        description: Code identifying of the product group the product belongs to.
+        expr: PRODUCT_GROUP
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - M010901
+          - M039101
+          - F020201
+      - name: PRODUCT_NUMBER
+        synonyms:
+          - product code from sap
+          - sap product code
+        description: String representing the corresponding product code from the sap source system
+        expr: PRODUCT_NUMBER
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - MU001183.01
+          - KR000268.00
+          - NP001770.01
+      - name: SHORT_CODE
+        synonyms:
+          - sap short code
+        description: Product short code in SAP system.
+        expr: SHORT_CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '4275'
+          - '8660'
+          - '42391'
+    filters:
+      - name: nicotine_pouches
+        synonyms:
+          - nicotine pouches
+          - tobacco-free snus
+        description: Filters data so that only nicotine pouches products are considered.
+        expr: PLATFORM_DESCRIPTION = 'P5'
+      - name: thunder_products
+        synonyms:
+          - Thunder brand
+        description: Filters data so that only THUNDER products are considered.
+        expr: BRAND_FAMILY_DESCRIPTION = 'THUNDER'
+      - name: zyn_20_products
+        synonyms:
+          - zyn 20 brand segment
+        description: Filters data so that only ZYN 20 products are considered.
+        expr: BRAND_SEGMENT = 'ZYN 20'
+      - name: zyn_products
+        synonyms:
+          - ZYN brand
+        description: Filters data so that only ZYN products are considered.
+        expr: BRAND_FAMILY_DESCRIPTION = 'ZYN'
+    primary_key:
+      columns:
+        - HK_H_PRODUCT
+    unique_keys:
+      - columns:
+          - HK_H_FINISHED_PRODUCT
+  - name: DIM_TERRITORY
+    synonyms:
+      - areas
+      - territories
+      - territory
+    description: |
+      The territory table is a dimension table that contains details about the business territories, such as the name, code, area name and area code.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: DIM_TERRITORY
+    dimensions:
+      - name: AREA_CODE
+        synonyms:
+          - area id
+        description: Code identifying the area the territory belongs to.
+        expr: AREA_CODE
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - AT_TEC
+          - AT_Salzburg
+          - AT_PET
+          - AT_DISTRICT03
+      - name: AREA_NAME
+        synonyms:
+          - name of area
+        description: Name of the area the territory belongs to.
+        expr: AREA_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Technical Stores
+          - Salzburg
+          - Petrol
+          - Niederoesterreich
+          - Area West
+      - name: HK_H_B2B_TERRITORY
+        synonyms:
+          - id of territory
+          - territory id
+        description: Primary key of the territory. Typically a hash value.
+        expr: HK_H_B2B_TERRITORY
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - ad44370a9954ad7e1e59af47105cb907
+          - b4e9a37dcb557df4ad25d0f3ca7ec492
+          - 8dcfc22a72a111c43f057b6df8df5494
+      - name: REEV_TERRITORY_CODE
+        synonyms:
+          - code territory in the reev system
+        description: Code for the territory in the REEV system.
+        expr: REEV_TERRITORY_CODE
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - AT_AT1
+          - AT_AT
+          - AT_PET
+          - AT_Salzburg
+          - AT_DISTRICT04
+      - name: REEV_TERRITORY_NAME
+        synonyms:
+          - name of territory
+          - territory name
+        description: Name for the territory in the REEV system.
+        expr: REEV_TERRITORY_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        unique: true
+        sample_values:
+          - Austria
+          - Sales
+          - Petrol
+          - Salzburg
+          - 400 Area North
+    primary_key:
+      columns:
+        - HK_H_B2B_TERRITORY
+    unique_keys:
+      - columns:
+          - REEV_TERRITORY_CODE
+      - columns:
+          - REEV_TERRITORY_NAME
+  - name: DP_DEVICE_REGISTRATION
+    synonyms:
+      - device actions
+      - device linking
+    description: Table storing actions by users related to devices. Typically these actions represent either linking or unlinking a device to a customers account.
+    base_table:
+      database: DB_AT_PRD
+      schema: DATA_PRODUCT
+      table: DP_DEVICE_REGISTRATION
+    dimensions:
+      - name: ACTION_DATE_KEY
+        synonyms:
+          - action_date_code
+          - action_date_id
+          - date_key
+        description: Date and time when a device registration action was taken. Foreign key to DIM_CALENDAR.
+        expr: ACTION_DATE_KEY
+        data_type: NUMBER(8,0)
+        sample_values:
+          - '20240709'
+          - '20250517'
+          - '20230912'
+      - name: ACTION_TYPE
+        synonyms:
+          - action_category
+          - action_classification
+          - activity_type
+          - event_type
+          - transaction_type
+        description: The type of action taken during for a given action. Can take the values LINK for actions related to linking a device to the user account or UNLINK which would refer to unlinking a device from a users account.
+        expr: ACTION_TYPE
+        data_type: VARCHAR(12) COLLATE 'en-ci'
+        sample_values:
+          - LINK
+          - UNLINK
+      - name: CONSUMER_ORIGIN
+        synonyms:
+          - customer_origin
+          - origin_of_consumer
+        description: Defines whether the consumer to which the device is linked or unlinked is registered in Austria or outside Austria. Can take the values Austrian or Not Austrian.
+        expr: CONSUMER_ORIGIN
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - Austrian
+          - Non Austrian
+      - name: HK_H_CONSUMER
+        synonyms:
+          - consumer_id
+          - customer_key
+        description: Foreign key to DIM_CONSUMER table.
+        expr: HK_H_CONSUMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 26f843cc5f2b4ac09a121108684b3f44
+          - 92300fb351974d809060201c30691f9a
+      - name: HK_H_PRODUCT
+        synonyms:
+          - item_code
+          - item_key
+          - product_key
+        description: Foreign key to the DIM_PRODUCT table.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 2cf68e33ae6ec3a85f48e583f60cfc47
+          - 3680dd5186577c16697b1113c51bf274
+      - name: HK_H_PURCHASE_CHANNEL_ID
+        synonyms:
+          - buying_channel_key
+          - purchase_channel_code
+          - purchase_channel_id
+          - purchase_channel_identifier
+        description: The channel through which the device was purchased. Foreign key to the DIM_CHANNEL.
+        expr: HK_H_PURCHASE_CHANNEL_ID
+        data_type: VARCHAR(38) COLLATE 'en-ci'
+        sample_values:
+          - '12'
+          - '3'
+          - '-1'
+      - name: HK_H_PURCHASE_CUSTOMER
+        synonyms:
+          - buyer_key
+          - customer_who_made_purchase_key
+          - purchaser_key
+          - purchasing_customer_key
+        description: The customer who purchased the device. Foreign key to DIM_CUSTOMER table.
+        expr: HK_H_PURCHASE_CUSTOMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 22a40cb33fda633a9ff0b5254b90c2ca
+          - e4ed0edc1b7831f2301d476dd5e13f70
+      - name: HK_H_REGISTRATION_CHANNEL_ID
+        synonyms:
+          - registration_channel_id
+          - registration_channel_key
+          - registration_medium_id
+          - registration_source_id
+        description: Unique identifier for the registration channel through which the device was registered. Foreign key to DIM_CHANNEL.
+        expr: HK_H_REGISTRATION_CHANNEL_ID
+        data_type: NUMBER(38,0)
+        sample_values:
+          - 12
+          - 3
+          - -1
+      - name: HK_H_REGISTRATION_CUSTOMER
+        synonyms:
+          - customer_registration_hash
+          - registration_customer_hash_key
+          - registration_customer_id
+          - registration_customer_identifier
+          - registration_customer_key
+        description: The customer associated with the device registration. Foreign key to DIM_CUSTOMER.
+        expr: HK_H_REGISTRATION_CUSTOMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 22a40cb33fda633a9ff0b5254b90c2ca
+          - 775afc4bb2511bd7c3d09358f04465ae
+          - f941f2c3f5874546ba4fa4ed7e7bea89
+      - name: HK_H_USER
+        synonyms:
+          - registered_user_code
+          - user_handle
+          - user_id
+          - user_identifier
+        description: Unique identifier to the user who registered the device.
+        expr: HK_H_USER
+        data_type: VARCHAR(70) COLLATE 'en-ci'
+        sample_values:
+          - '-1'
+          - 005aV0000090KGDQA2
+      - name: LAS_LAU_SPLIT
+        description: Differenciates between Legal Age Smokers (an user that is linking a device to his account for the first time) and Legal Age Users (an user that has linked at least one more device to his/her account in the past).
+        expr: LAS_LAU_SPLIT
+        data_type: VARCHAR(3) COLLATE 'en-ci'
+        sample_values:
+          - LAS
+          - LAU
+      - name: LINK_UNLINK_TYPE
+        synonyms:
+          - link_type
+          - unlink_type
+        description: Type of device registration action in detail, namely if it is related to a device replacement, an unlinking related to a device return, or a normal linking or unlinking.
+        expr: LINK_UNLINK_TYPE
+        data_type: VARCHAR(40) COLLATE 'en-ci'
+        sample_values:
+          - NORMAL LINKING
+          - NORMAL UNLINKING
+          - REPLACEMENT LINKING
+          - REPLACEMENT UNLINKING
+          - RETURN UNLINKING
+      - name: ORDER_ID
+        synonyms:
+          - order_number
+          - order_reference
+        description: Unique identifier for the order associated with the device registration.
+        expr: ORDER_ID
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - '1049690818'
+          - '1044831269'
+      - name: PRODUCT_DESCRIPTION
+        synonyms:
+          - device_description
+          - item_info
+          - product_details
+          - product_info
+          - product_specifications
+        description: A brief description of the product or device to which the action refers to.
+        expr: PRODUCT_DESCRIPTION
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - KIT IQOS ORIGINALS DUO SLATE
+          - 'KIT IQOS ORIGINALS ONE SILVER 1P #8587'
+      - name: PRODUCT_NUMBER
+        synonyms:
+          - product_identifier
+        description: Unique identifier for a product.
+        expr: PRODUCT_NUMBER
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - DK002854.01
+          - DK003788.00
+      - name: PRODUCT_VERSION
+        synonyms:
+          - product_version
+          - version_number
+        description: The version of the product that the device to which the action refers to.
+        expr: PRODUCT_VERSION
+        data_type: VARCHAR(40) COLLATE 'en-ci'
+        sample_values:
+          - IQOS ORIGINALS ONE
+          - IQOS 3 DUO
+      - name: PURCHASE_CHANNEL
+        synonyms:
+          - acquisition_channel
+          - buying_channel
+          - purchase_method
+        description: The channel through which the device was purchased.
+        expr: PURCHASE_CHANNEL
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Direct Retail
+          - Indirect Retail
+          - Website
+      - name: PURCHASE_SUBCHANNEL
+        synonyms:
+          - purchase_sub_category
+          - purchase_sub_segment
+        description: The subchannel through which the device was purchased.
+        expr: PURCHASE_SUBCHANNEL
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Device Seller
+          - Website
+          - IQOS Partner
+      - name: REGISTRATION_CHANNEL
+        synonyms:
+          - channel_of_registration
+          - enrollment_channel
+          - sign_up_channel
+        description: The channel through which the device was registered.
+        expr: REGISTRATION_CHANNEL
+        data_type: VARCHAR(30) COLLATE 'en-ci'
+        sample_values:
+          - Indirect Retail
+          - Website
+          - Indirect Retail
+      - name: REGISTRATION_SUBCHANNEL
+        synonyms:
+          - registration_sub_category
+          - registration_sub_group
+        description: The subchannel through which the device was registered.
+        expr: REGISTRATION_SUBCHANNEL
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - Shop in shop
+          - Device Seller Plus
+          - Website
+          - IQOS Partner
+      - name: SERIAL_NUMBER
+        synonyms:
+          - asset_number
+          - device_id
+          - equipment_number
+          - product_serial
+          - serial_id
+          - unit_id
+        description: A unique identifier assigned to a device by the manufacturer, used to distinguish it from other devices.
+        expr: SERIAL_NUMBER
+        data_type: VARCHAR(12) COLLATE 'en-ci'
+        sample_values:
+          - K4LS2RV81LYV
+          - K4MER9T5LJCD
+          - K4NWUR5VN86Q
+      - name: VOUCHER_CODE
+        synonyms:
+          - coupon_code
+          - discount_code
+          - redemption_code
+          - voucher_number
+        description: Code for the voucher used to register a device.
+        expr: VOUCHER_CODE
+        data_type: VARCHAR(400) COLLATE 'en-ci'
+        sample_values:
+          - IQOSXM20
+          - FREUND-881113
+          - CGM-6PLA-LEMC
+  - name: FACT_BUDGET_CHANNEL
+    synonyms:
+      - budget by channel
+    description: The FACT_BUDGET_CHANNEL stores data related to the budget grouped by channel.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: FACT_BUDGET_CHANNEL
+    dimensions:
+      - name: DISTRIBUTION_TYPE
+        synonyms:
+          - type of distribution
+        description: Defines if the record refers to IMS or Offtake.
+        expr: DISTRIBUTION_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - OFFTAKE
+          - IMS
+      - name: HK_H_CHANNEL_ID
+        synonyms:
+          - channel id
+          - channel key
+          - id of channel
+          - key of channel
+        description: Foreign key to the DIM_CHANNEL table.
+        expr: HK_H_CHANNEL_ID
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - '-1'
+          - '10'
+          - '6'
+      - name: HK_H_PRODUCT
+        synonyms:
+          - id of product
+          - key of product
+          - product id
+          - product key
+        description: Foreign key to the DIM_PRODUCT table.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 469df66b6bf8966eb71e46709c7b1e78
+          - 3604449b4cd6680fd20cf475dbf5323d
+          - d360e4133fe37d910248485d35182642
+      - name: PLAN_VERSION
+        synonyms:
+          - version of plan
+        description: Defines the plan version on which the record is defined.
+        expr: PLAN_VERSION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - RF6
+          - OB
+      - name: SALES_DATE_KEY
+        synonyms:
+          - date id
+          - date key
+          - id of date
+          - key of date
+        description: Foreign key to the DIM_CALENDAR table.
+        expr: SALES_DATE_KEY
+        data_type: NUMBER(8,0)
+        sample_values:
+          - '20250702'
+          - '20250710'
+          - '20250929'
+      - name: UNIT_OF_MEASURE
+        synonyms:
+          - unit type
+        description: Describes the unit in which the quantity is defined.
+        expr: UNIT_OF_MEASURE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Pouches
+          - Pods
+          - Pieces
+          - sticks
+    facts:
+      - name: QUANTITY
+        synonyms:
+          - amount
+        description: Quantity of products for a given record.
+        expr: QUANTITY
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '137487.944188571'
+          - '85.95631'
+    filters:
+      - name: IMS
+        synonyms:
+          - in market sales
+          - sell-in
+        description: Filters data to only show records related to IMS.
+        expr: DISTRIBUTION_TYPE ILIKE 'IMS'
+      - name: OB
+        synonyms:
+          - budget
+          - original budget
+        description: Filters data to only OB (original budget) as its plan version.
+        expr: PLAN_VERSION ILIKE 'OB'
+      - name: OFFTAKE
+        synonyms:
+          - sell-out
+        description: Filters data to only show records related to Offtake.
+        expr: DISTRIBUTION_TYPE ILIKE 'OFFTAKE'
+      - name: RF11
+        synonyms:
+          - Rolling Forecast 11
+        description: Filters data to show only records related to plan version RF11 (Rolling Forecast 11)
+        expr: PLAN_VERSION ILIKE 'RF11'
+      - name: RF3
+        synonyms:
+          - Rolling Forecast 3
+        description: Filters data to only records with plan version RF3 (Rolling Forecast 3)
+        expr: PLAN_VERSION ILIKE 'RF3'
+      - name: RF6
+        synonyms:
+          - Rolling Forecast 6
+        description: Filters records to only records with plan version RF6 (Rolling Forecast 6).
+        expr: PLAN_VERSION ILIKE 'RF6'
+      - name: RF9
+        synonyms:
+          - Rolling Forecast 9
+        description: Filters data to show only records with plan version as RF9 (Rolling Forecast 9).
+        expr: PLAN_VERSION ILIKE 'RF9'
+    metrics:
+      - name: BUDGET
+        synonyms:
+          - budget
+        description: Sums the quantity to provide the budget amount for a given category.
+        expr: SUM(QUANTITY)
+        access_modifier: public_access
+    primary_key:
+      columns:
+        - HK_H_PRODUCT
+        - HK_H_CHANNEL_ID
+        - PLAN_VERSION
+        - UNIT_OF_MEASURE
+        - DISTRIBUTION_TYPE
+        - SALES_DATE_KEY
+        - NOTE
+  - name: FACT_BUDGET_TERRITORY
+    synonyms:
+      - budget by territory
+    description: The FACT_BUDGET_TERRITORY stores data related to the budget grouped by territory.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: FACT_BUDGET_TERRITORY
+    dimensions:
+      - name: DISTRIBUTION_TYPE
+        synonyms:
+          - type of distribution
+        description: Defines if the record refers to IMS or Offtake
+        expr: DISTRIBUTION_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - OFFTAKE
+          - IMS
+      - name: HK_H_B2B_TERRITORY
+        synonyms:
+          - id of territory
+          - key of territory
+          - territory id
+          - territory key
+        description: Foreign key to the DIM_TERRITORY table.
+        expr: HK_H_B2B_TERRITORY
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 4b5762cbd4d98741497ba6aa02eceae9
+          - fa7b0a3f2fc2d5e7ad3feef365be33f6
+          - c7bb6b43c141416d4eff6d8c8728f062
+      - name: HK_H_PRODUCT
+        synonyms:
+          - id of product
+          - key of product
+          - product id
+          - product key
+        description: Foreign key to the DIM_PRODUCT table.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 7d2f22b99ea2ca4a8a514c1b8726f94d
+          - 3604449b4cd6680fd20cf475dbf5323d
+          - 006e9515a0d98e88605e35756c6f755e
+      - name: PLAN_VERSION
+        synonyms:
+          - version of plan
+        description: Defines the plan version on which the record is defined.
+        expr: PLAN_VERSION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - RF6
+      - name: SALES_DATE_KEY
+        synonyms:
+          - date id
+          - date key
+          - id of date
+          - key of date
+        description: Foreign key to the DIM_CALENDAR table.
+        expr: SALES_DATE_KEY
+        data_type: NUMBER(8,0)
+        sample_values:
+          - '20250602'
+          - '20250603'
+          - '20250604'
+      - name: UNIT_OF_MEASURE
+        synonyms:
+          - unit type
+        description: Describes the unit in which the quantity is defined.
+        expr: UNIT_OF_MEASURE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Pouches
+          - pods
+          - pieces
+    facts:
+      - name: QUANTITY
+        synonyms:
+          - amount
+        description: Quantity of products for a given record.
+        expr: QUANTITY
+        data_type: FLOAT
+        access_modifier: public_access
+    filters:
+      - name: IMS
+        synonyms:
+          - in market sales
+          - sell-in
+        description: Filters data to only show records related to IMS.
+        expr: DISTRIBUTION_TYPE ILIKE 'IMS'
+      - name: OB
+        synonyms:
+          - budget
+          - original budget
+        description: Filters data to only OB (original budget) as its plan version.
+        expr: PLAN_VERSION ILIKE 'OB'
+      - name: OFFTAKE
+        synonyms:
+          - sell-out
+        description: Filters data to only show records related to Offtake.
+        expr: DISTRIBUTION_TYPE ILIKE 'OFFTAKE'
+      - name: RF11
+        synonyms:
+          - Rolling Forecast 11
+        description: Filters data to show only records related to plan version RF11 (Rolling Forecast 11)
+        expr: PLAN_VERSION ILIKE 'RF11'
+      - name: RF3
+        synonyms:
+          - Rolling Forecast 3
+        description: Filters data to only records with plan version RF3 (Rolling Forecast 3)
+        expr: PLAN_VERSION ILIKE 'RF3'
+      - name: RF6
+        synonyms:
+          - Rolling Forecast 6
+        description: Filters records to only records with plan version RF6 (Rolling Forecast 6).
+        expr: PLAN_VERSION ILIKE 'RF6'
+      - name: RF9
+        synonyms:
+          - Rolling Forecast 9
+        description: Filters data to show only records with plan version as RF9 (Rolling Forecast 9).
+        expr: PLAN_VERSION ILIKE 'RF9'
+    metrics:
+      - name: BUDGET
+        synonyms:
+          - budget
+        description: Sums the quantity to provide the budget amount for a given category.
+        expr: SUM(QUANTITY)
+        access_modifier: public_access
+    primary_key:
+      columns:
+        - HK_H_PRODUCT
+        - HK_H_B2B_TERRITORY
+        - PLAN_VERSION
+        - UNIT_OF_MEASURE
+        - DISTRIBUTION_TYPE
+  - name: FACT_IMS
+    synonyms:
+      - ims
+      - sell-in
+    description: |
+      The ims table is a fact table containing details regarding ims,
+      which refers to the PMI products that are sold to tobacconists.
+      IMS stands for In Market Sales.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: FACT_IMS
+    dimensions:
+      - name: BILLING_DOCUMENT
+        synonyms:
+          - document number
+          - invoice number
+        description: Unique identifier of the billing object.
+        expr: BILLING_DOCUMENT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - '4017962888'
+          - '4024993457'
+          - '4022311671'
+      - name: BILLING_TYPE
+        description: |
+          Determines the type of billing. Can be used for example to  determine whether a record corresponds to sale or a return.
+        expr: BILLING_TYPE
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - ZF1
+          - ZF2
+          - ZF3
+          - ZRE
+          - N/A
+      - name: HK_H_CHANNEL_ID
+        synonyms:
+          - channel id
+          - id of channel
+          - key of channel
+        description: Foreign key from the channel table.
+        expr: HK_H_CHANNEL_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '1'
+          - '4'
+          - '10'
+          - '12'
+      - name: HK_H_CUSTOMER
+        synonyms:
+          - customer id
+          - customer key
+          - id of customer
+          - key of customer
+        description: Foreign key from the customer table.
+        expr: HK_H_CUSTOMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - da6d24e713395ce4ca79ee784c88fe3b
+          - 0f93a58d07d2fde213c03f47463fe1ca
+          - 9de0556eaee606bf429b455f1f1ed491
+      - name: HK_H_PRODUCT
+        synonyms:
+          - id of product
+          - key of product
+          - product id
+          - product key
+        description: Foreign key from the product table.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - 30176eb3144b62eb0fc3bcd2471197bc
+          - 326f5891e536c43c4fe4cf7ba66ba7c9
+          - ebd36e0fba2c1cd30800e6d8772f3ef4
+      - name: SALES_DATE_KEY
+        synonyms:
+          - calendar key
+          - date id
+          - sales date id
+        description: Foreign key from the calendar table.
+        expr: SALES_DATE_KEY
+        data_type: NUMBER(8,0)
+        unique: false
+        sample_values:
+          - '20181205'
+          - '20241220'
+          - '20250308'
+      - name: UNIT_OF_MEASURE
+        synonyms:
+          - unit type
+        description: Unit of measure in which quantity is expressed.
+        expr: UNIT_OF_MEASURE
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Sticks
+          - Grams
+          - Pods
+          - Pouches
+          - Pieces
+          - PC
+    facts:
+      - name: COST
+        synonyms:
+          - transfer price
+        description: Transfer price of the products.
+        expr: COST
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '12.3'
+          - '48.16'
+          - '45.51'
+      - name: NET_VALUE
+        synonyms:
+          - net sales
+          - ret receivable value
+          - revenue after discount
+        description: Net receivable value of the products
+        expr: NET_VALUE
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '91.02'
+          - '244.69'
+          - '20.82'
+      - name: QUANTITY
+        synonyms:
+          - ims
+          - ims quantity
+          - in market sales
+          - sell-out
+        description: Represents the quantity of the product sold to the tobbaconists.
+        expr: QUANTITY
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '800'
+          - '352'
+          - '6800'
+      - name: TAX_AMOUNT
+        synonyms:
+          - tax
+          - tax applied
+          - tax quantity
+        description: Absolute tax value applied to the purchase.
+        expr: TAX_AMOUNT
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '16.34'
+          - '31.11'
+          - '153.9'
+      - name: TURNOVER
+        synonyms:
+          - Retail selling value
+        description: Retail selling value, the amount of money generated by the retailer through the sale of the products.
+        expr: TURNOVER
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '127.2'
+          - '245'
+          - '2850'
+    filters:
+      - name: returns
+        synonyms:
+          - items returned
+        description: A filter used to restrict data to transactions where items are returned.
+        expr: BILLING_TYPE ILIKE 'ZRE'
+      - name: sales
+        synonyms:
+          - items sold
+        description: |
+          A filter used to restrict data to transactions where items are sold. This means that item returns are excluded.
+        expr: BILLING_TYPE NOT ILIKE 'ZRE' AND BILLING_TYPE IS NOT NULL
+    metrics:
+      - name: IMS
+        synonyms:
+          - sell-in
+        description: Represents the quantity of PMI products that are sold to tobacconists
+        expr: SUM(QUANTITY)
+        access_modifier: public_access
+    primary_key:
+      columns:
+        - HK_H_CUSTOMER
+        - HK_H_PRODUCT
+        - HK_H_CHANNEL_ID
+        - SALES_DATE_KEY
+        - BILLING_DOCUMENT
+        - BILLING_TYPE
+  - name: FACT_OFFTAKE_COMBINED
+    synonyms:
+      - offtake
+      - sell-out
+    description: |
+      FACT_OFFTAKE_COMBINED stores data related to our offtake, which refers to products sold to consumers
+      either by tobbaconists our directly by PMI through boutique or ecommerce channels.
+      Offtake can also be refered to as sell-out.
+    base_table:
+      database: DB_AT_PRD
+      schema: PRESENTATION
+      table: FACT_OFFTAKE_COMBINED
+    dimensions:
+      - name: HK_H_CHANNEL_ID
+        synonyms:
+          - channel id
+          - channel key
+          - id of channel
+          - key of channel
+        description: Foreign key column from the DIM_CHANNEL table.
+        expr: HK_H_CHANNEL_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '8'
+          - '10'
+          - '12'
+      - name: HK_H_CUSTOMER
+        synonyms:
+          - customer id
+          - customer key
+          - customer_key
+          - id of customer
+          - key of customer
+        description: Foreign key column from the DIM_CUSTOMER table.
+        expr: HK_H_CUSTOMER
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - 3b4fb289425026db4d5b88e49d4cceb8
+          - 50c6d5a2409cf92a1a754d1140cab8bc
+          - feac71fa464c798e45d137a92a9f658c
+      - name: HK_H_PRODUCT
+        synonyms:
+          - id of product
+          - key of product
+          - product id
+          - product key
+        description: Foreign key column from the DIM_PRODUCT table.
+        expr: HK_H_PRODUCT
+        data_type: VARCHAR(32) COLLATE 'en-ci'
+        sample_values:
+          - 197afd3585733ffe84051475877135fb
+          - 1e6863b0e9c38de3c7a45a6f07060bea
+          - 9c21fa69f02f96ffd69b460d13574a93
+      - name: SALES_DATE_KEY
+        synonyms:
+          - date id
+          - date key
+          - id of date
+          - key of date
+        description: Foreign key column from the DIM_CALENDAR table.
+        expr: SALES_DATE_KEY
+        data_type: NUMBER(8,0)
+        unique: false
+        sample_values:
+          - '20171128'
+          - '20210406'
+          - '20250321'
+      - name: UNIT_OF_MEASURE
+        synonyms:
+          - unit type
+        description: Unit of measure in which quantity is expressed.
+        expr: UNIT_OF_MEASURE
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        unique: false
+        sample_values:
+          - Sticks
+          - Grams
+          - Pods
+          - Pouches
+          - Pieces
+          - PC
+    facts:
+      - name: QUANTITY
+        synonyms:
+          - offtake
+          - sell-out
+        description: |
+          Quantity of PMI products sold to consumers, either by tobacconists or 
+          directly by PMI through our boutique or ecommerce channels.
+        expr: QUANTITY
+        data_type: FLOAT
+        access_modifier: public_access
+    primary_key:
+      columns:
+        - HK_H_CUSTOMER
+        - HK_H_PRODUCT
+        - HK_H_CHANNEL_ID
+        - SALES_DATE_KEY
+        - UNIT_OF_MEASURE
+        - OFFTAKE_SOURCE
+relationships:
+  - name: CONSUMER_TO_CALENDAR
+    left_table: DIM_CONSUMER
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: REGISTRATION_DATE_KEY
+        right_column: DATE_KEY
+  - name: CONSUMER_TO_CHANNEL
+    left_table: DIM_CONSUMER
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: CONSUMER_TO_CUSTOMER
+    left_table: DIM_CONSUMER
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: HK_H_CUSTOMER
+        right_column: HK_H_CUSTOMER
+  - name: CUSTOMERS_TO_TERRITORIES
+    left_table: DIM_CUSTOMER
+    right_table: DIM_TERRITORY
+    relationship_columns:
+      - left_column: HK_H_B2B_TERRITORY
+        right_column: HK_H_B2B_TERRITORY
+  - name: DEVICE_REGISTRATIONS_TO_CALENDAR
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: ACTION_DATE_KEY
+        right_column: DATE_KEY
+  - name: DEVICE_REGISTRATION_TO_CONSUMER
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CONSUMER
+    relationship_columns:
+      - left_column: HK_H_CONSUMER
+        right_column: HK_H_CONSUMER
+  - name: DEVICE_REGISTRATION_TO_PRODUCT
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: HK_H_PRODUCT
+        right_column: HK_H_PRODUCT
+  - name: DEVICE_REGISTRATION_TO_PURCHASE_CHANNEL
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_PURCHASE_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: DEVICE_REGISTRATION_TO_PURCHASE_CUSTOMER
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: HK_H_PURCHASE_CUSTOMER
+        right_column: HK_H_CUSTOMER
+  - name: DEVICE_REGISTRATION_TO_REGISTRATION_CHANNEL
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_REGISTRATION_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: DEVICE_REGISTRATION_TO_REGISTRATION_CUSTOMER
+    left_table: DP_DEVICE_REGISTRATION
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: HK_H_REGISTRATION_CUSTOMER
+        right_column: HK_H_CUSTOMER
+  - name: BUDGET_CHANNEL_TO_CALENDAR
+    left_table: FACT_BUDGET_CHANNEL
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: SALES_DATE_KEY
+        right_column: DATE_KEY
+  - name: BUDGET_CHANNEL_TO_CHANNEL
+    left_table: FACT_BUDGET_CHANNEL
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: BUDGET_CHANNEL_TO_PRODUCT
+    left_table: FACT_BUDGET_CHANNEL
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: HK_H_PRODUCT
+        right_column: HK_H_PRODUCT
+  - name: BUDGET_TERRITORY_TO_CALENDAR
+    left_table: FACT_BUDGET_TERRITORY
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: SALES_DATE_KEY
+        right_column: DATE_KEY
+  - name: BUDGET_TERRITORY_TO_PRODUCT
+    left_table: FACT_BUDGET_TERRITORY
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: HK_H_PRODUCT
+        right_column: HK_H_PRODUCT
+  - name: BUDGET_TERRITORY_TO_TERRITORY
+    left_table: FACT_BUDGET_TERRITORY
+    right_table: DIM_TERRITORY
+    relationship_columns:
+      - left_column: HK_H_B2B_TERRITORY
+        right_column: HK_H_B2B_TERRITORY
+  - name: IMS_TO_CALENDAR
+    left_table: FACT_IMS
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: SALES_DATE_KEY
+        right_column: DATE_KEY
+  - name: IMS_TO_CHANNELS
+    left_table: FACT_IMS
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: IMS_TO_CUSTOMERS
+    left_table: FACT_IMS
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: HK_H_CUSTOMER
+        right_column: HK_H_CUSTOMER
+  - name: IMS_TO_PRODUCTS
+    left_table: FACT_IMS
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: HK_H_PRODUCT
+        right_column: HK_H_PRODUCT
+  - name: OFFTAKE_TO_CALENDAR
+    left_table: FACT_OFFTAKE_COMBINED
+    right_table: DIM_CALENDAR
+    relationship_columns:
+      - left_column: SALES_DATE_KEY
+        right_column: DATE_KEY
+  - name: OFFTAKE_TO_CHANNEL
+    left_table: FACT_OFFTAKE_COMBINED
+    right_table: DIM_CHANNEL
+    relationship_columns:
+      - left_column: HK_H_CHANNEL_ID
+        right_column: HK_H_CHANNEL_ID
+  - name: OFFTAKE_TO_CUSTOMER
+    left_table: FACT_OFFTAKE_COMBINED
+    right_table: DIM_CUSTOMER
+    relationship_columns:
+      - left_column: HK_H_CUSTOMER
+        right_column: HK_H_CUSTOMER
+  - name: OFFTAKE_TO_PRODUCT
+    left_table: FACT_OFFTAKE_COMBINED
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: HK_H_PRODUCT
+        right_column: HK_H_PRODUCT
+verified_queries:
+  - name: What is the net volume offtake?
+    question: What is the net volume offtake?
+    sql: |
+      SELECT
+          SUM(
+              CASE 
+                  WHEN UPPER(fo.unit_of_measure) IN ('PIECES', 'POUCHES', 'STICKS', 'PODS') THEN fo.quantity
+                  WHEN UPPER(fo.unit_of_measure) = 'GRAMS' THEN 
+                      CASE 
+                          WHEN UPPER(LEFT(dp.product_number, 2)) IN ('FW', 'FG') THEN fo.quantity / 0.6
+                          WHEN UPPER(LEFT(dp.product_number, 2)) = 'FF' THEN fo.quantity / 0.73
+                          ELSE 0
+                      END
+                  ELSE 0
+              END
+          ) AS volume_net_offtake
+      FROM 
+          __fact_offtake_combined AS fo
+      LEFT JOIN 
+          __dim_product AS dp 
+          ON fo.hk_h_product = dp.hk_h_product;
+    use_as_onboarding_question: false
+    verified_by: Joao Pereira
+    verified_at: 1755690793
+  - name: What is the split of IMS quantity per channel?
+    question: What is the split of IMS quantity per channel?
+    sql: |-
+      WITH cte_fact_ims AS (
+        SELECT
+          hk_h_channel_id,
+          quantity
+        FROM __fact_ims
+      ), cte_dim_channel AS (
+        SELECT
+          channel_description,
+          hk_h_channel_id
+        FROM __dim_channel
+      )
+      SELECT
+        dc.channel_description,
+        SUM(fims.quantity) AS ims_quantity
+      FROM cte_fact_ims AS fims
+      LEFT JOIN cte_dim_channel AS dc
+        ON fims.hk_h_channel_id = dc.hk_h_channel_id
+      GROUP BY
+        dc.channel_description
+      ORDER BY
+        ims_quantity DESC NULLS LAST
+    use_as_onboarding_question: false
+    verified_by: Joao Pereira
+    verified_at: 1756129204
+  - name: |-
+      What is a split of IMS for ZYN 20 and 21 per channel?
+       
+    question: |-
+      What is a split of IMS for ZYN 20 and 21 per channel?
+       
+    sql: |-
+      WITH cte_fact_ims AS (
+        SELECT
+          hk_h_channel_id,
+          hk_h_product,
+          quantity
+        FROM __fact_ims
+      ), cte_dim_product AS (
+        SELECT
+          brand_segment,
+          hk_h_product
+        FROM __dim_product
+      ), cte_dim_channel AS (
+        SELECT
+          channel_description,
+          hk_h_channel_id
+        FROM __dim_channel
+      ), ims_data AS (
+        SELECT
+          brand_segment,
+          bc.channel_description,
+          SUM(fi.quantity) AS total_ims
+        FROM cte_fact_ims AS fi
+        LEFT OUTER JOIN cte_dim_product AS dp
+          ON fi.hk_h_product = dp.hk_h_product
+        LEFT OUTER JOIN cte_dim_channel AS bc
+          ON fi.hk_h_channel_id = bc.hk_h_channel_id
+        WHERE
+          dp.brand_segment IN ('ZYN 20', 'ZYN 21')
+        GROUP BY
+          bc.channel_description, dp.brand_segment
+      )
+      SELECT
+        channel_description,
+        brand_segment,
+        total_ims
+      FROM ims_data
+      ORDER BY
+        total_ims DESC NULLS LAST
+    use_as_onboarding_question: false
+    verified_by: Joao Pereira
+    verified_at: 1756129288

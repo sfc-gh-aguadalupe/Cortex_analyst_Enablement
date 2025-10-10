@@ -1,0 +1,301 @@
+name: CONSUMER_PERF
+description: This semantic view allows to explore consumer interactions in points of sales
+tables:
+  - name: CRM_FACT_CONSUMER_PERFORMANCE
+    base_table:
+      database: DB_FDF_DEV
+      schema: CS_MRKTCRM
+      table: CRM_FACT_CONSUMER_PERFORMANCE
+    dimensions:
+      - name: COUNTRY_CODE
+        synonyms:
+          - country of residence
+        description: The country where the consumer resides, represented by a three-letter ISO 3166-1 alpha-3 code.
+        expr: COUNTRY_CODE
+        data_type: VARCHAR(4) COLLATE 'en-ci'
+        sample_values:
+          - SG
+          - KE
+          - HR
+      - name: DF_MARKET_NAME
+        synonyms:
+          - market name
+          - country of registration
+          - country of airport
+          - GTR market
+          - sales market
+        description: The market or country where the interaction with the consumer has occured.
+        expr: DF_MARKET_NAME
+        data_type: VARCHAR(200) COLLATE 'en-ci'
+        sample_values:
+          - Colombia
+          - Niger
+          - Kenya
+      - name: LOCATION_DESC
+        synonyms:
+          - location detailed
+        description: Detailed description of the location.
+        expr: LOCATION_DESC
+        data_type: VARCHAR(545) COLLATE 'en-ci'
+        sample_values:
+          - Katowice (Poland-Airports)
+          - Kayseri Airport (Turkey-Airports)
+          - Bremen (Germany-Airports)
+      - name: LOCATION_NAME
+        synonyms:
+          - airport name
+          - location of POS
+          - location
+        description: The geographic location where the point of sale is located. This can be for example an airport within multiple stores or point of sales are located.
+        expr: LOCATION_NAME
+        data_type: VARCHAR(250) COLLATE 'en-ci'
+        sample_values:
+          - Managua
+          - Budapest
+          - Panama Tocumen
+      - name: POV_NAME
+        synonyms:
+          - point of sale
+          - shop
+          - touchpoint
+        description: The name of the point of sale or store or shop where consumer interaction has occured.
+        expr: POV_NAME
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - GRU-Out Bound TPS3
+          - WDFG Duty Free Shop T3 Express DP
+          - 'Calgary Shops '
+      - name: TRADE_CHANNEL_NAME
+        synonyms:
+          - sales channel
+        description: The channel through which the consumer is travelling through and where the interaction has occured.
+        expr: TRADE_CHANNEL_NAME
+        data_type: VARCHAR(60) COLLATE 'en-ci'
+        sample_values:
+          - Borders
+          - Airports
+          - Diplomatic
+      - name: VP_REGION_NAME
+        synonyms:
+          - region name
+        description: The geographic region where the point of sale is located
+        expr: VP_REGION_NAME
+        data_type: VARCHAR(200) COLLATE 'en-ci'
+        sample_values:
+          - Middle East
+          - Eurasia
+          - Africa
+    time_dimensions:
+      - name: MONTH_NUM
+        expr: MONTH_NUM
+        data_type: NUMBER(10,0)
+      - name: YEAR_NUM
+        synonyms:
+          - Year
+        description: Year number
+        expr: YEAR_NUM
+        data_type: NUMBER(10,0)
+        sample_values:
+          - '2022'
+          - '2021'
+          - '2023'
+          - '2024'
+    facts:
+      - name: CONTACT_NUM
+        synonyms:
+          - customer contacts
+          - interactions
+        description: The number of interactions performed with consumers by IQOS experts.
+        expr: CONTACT_NUM
+        data_type: NUMBER(18,0)
+        access_modifier: public_access
+        sample_values:
+          - '4'
+          - '128'
+          - '75'
+      - name: FTE_NUM
+        synonyms:
+          - full_time_equivalent
+          - full_time_staff
+        description: Full-time Equivalents IQOS experts in charge of performing consumer interactions
+        expr: FTE_NUM
+        data_type: NUMBER(38,12)
+        access_modifier: public_access
+        sample_values:
+          - '5.667915630875'
+          - '1.098396402015'
+          - '1.745977047400'
+      - name: IS_RRP_DOMESTIC
+        synonyms:
+          - residence country has RRP
+        description: Indicates whether the consumer is a market where RRP products are sold, such as IQOS, VEEV or ZYN.
+        expr: IS_RRP_DOMESTIC
+        data_type: NUMBER(10,0)
+        access_modifier: public_access
+      - name: LAC_NUM
+        synonyms:
+          - legal_age_customers
+          - legal_age_consumers
+        description: Legal age consumer but not a smoker of CC or RRP, buying to gift or for someone else but not own use.
+        expr: LAC_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '2'
+          - '117'
+          - '56'
+      - name: LAC_PAX_NUM
+        synonyms:
+          - estimated adult smokers
+        description: The number of legal age consumer (LAC) that have traveled through the airport or location..
+        expr: LAC_PAX_NUM
+        data_type: NUMBER(38,16)
+        access_modifier: public_access
+        sample_values:
+          - '52.5000000000000000'
+          - '2710.0000000000000000'
+          - '65.7600000000000000'
+      - name: LAS_NUM
+        synonyms:
+          - legal_age_smoker_count
+          - smoker_count
+          - las_count
+          - adult_smoker_count
+          - smoker_population
+        description: The number of interactions done with consumers of CC (conventional cigarettes).
+        expr: LAS_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '14'
+          - '10'
+          - '28'
+      - name: LAU_COMP_NUM
+        synonyms:
+          - competitor LAU
+        description: Number of legal age users, using competitor RRP products.
+        expr: LAU_COMP_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '42'
+          - '4'
+          - '49'
+      - name: LAU_IQOS_NUM
+        synonyms:
+          - IQOS LAU
+          - IQOS users
+          - P1 LAU
+        description: Number of legal age users, using IQOS.
+        expr: LAU_IQOS_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '12'
+          - '66'
+          - '134'
+      - name: LAU_VEEV_NUM
+        synonyms:
+          - veev lau
+          - veev users
+          - P4 users
+        description: Number of legal age users, using VEEV.
+        expr: LAU_VEEV_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '9'
+          - '1'
+          - '7'
+      - name: LAU_ZYN_NUM
+        synonyms:
+          - zyn users
+          - zyn consumers
+          - P5 users
+        description: Number of legal age users, using ZYN.
+        expr: LAU_ZYN_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '4'
+          - '2'
+          - '47'
+      - name: LEAD_NUM
+        synonyms:
+          - total leads
+        description: The number of leads generated.
+        expr: LEAD_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '7'
+          - '1'
+          - '5'
+      - name: NEW_PURCH_IQOS_NUM
+        synonyms:
+          - IQOS buyers
+        description: The number of consumers who have purchased an IQOS devices.
+        expr: NEW_PURCH_IQOS_NUM
+        data_type: FLOAT
+        access_modifier: public_access
+        sample_values:
+          - '3'
+          - '0.01'
+          - '31'
+      - name: NEW_PURCH_VEEVONE_NUM
+        synonyms:
+          - VEEV buyers
+          - P4 buyers
+        description: The number of consumers who have purchased VEEV.
+        expr: NEW_PURCH_VEEVONE_NUM
+        data_type: NUMBER(31,5)
+        access_modifier: public_access
+        sample_values:
+          - '109.00000'
+          - '10.00000'
+          - '4.00000'
+      - name: NEW_PURCH_ZYN_NUM
+        synonyms:
+          - ZYN buyers
+          - P5 buyers
+        description: The number of consumers who have purchased ZYN.
+        expr: NEW_PURCH_ZYN_NUM
+        data_type: NUMBER(31,5)
+        access_modifier: public_access
+        sample_values:
+          - '945.07000'
+          - '15.00000'
+          - '92.01000'
+      - name: PAX_QUANTITY
+        synonyms:
+          - passenger number
+        description: The total number of passengers (PAX) that have traveled through the airport or location.
+        expr: PAX_QUANTITY
+        data_type: NUMBER(38,16)
+        access_modifier: public_access
+        sample_values:
+          - '10679.8611108120750000'
+          - '565.3703703698050000'
+          - '516.4999999958680000'
+      - name: REG_EXIST_IQOS_NUM
+        synonyms:
+          - existing IQOS users
+        description: The number of consumers for which IQOS experts are registering an IQOS device, but who are existing IQOS users.
+        expr: REG_EXIST_IQOS_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '0'
+      - name: REG_FIRST_IQOS_NUM
+        synonyms:
+          - new_iqos_registrations
+          - first_time_iqos_registrants
+          - new_iqos_customers
+        description: The number of consumers for which IQOS experts are registering an IQOS device for the first time.
+        expr: REG_FIRST_IQOS_NUM
+        data_type: NUMBER(13,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '5'
+          - '23'

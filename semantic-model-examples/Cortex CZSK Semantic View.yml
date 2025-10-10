@@ -1,0 +1,1254 @@
+name: CZSK_PILOT_SALE_CRM
+tables:
+  - name: CORTEX_ANALYST_PILOT_CRM
+    synonyms:
+      - '"CRM engagment"'
+      - '"CRM performance"'
+      - '"CRM"'
+      - '"email engagement"'
+      - '"email performance"'
+      - '"emails"'
+    base_table:
+      database: DB_CZSK_DP_QAS
+      schema: DP_COMMON_LAYER
+      table: CORTEX_ANALYST_PILOT_CRM
+    dimensions:
+      - name: EMAILNAME
+        synonyms:
+          - email_address
+          - email_id
+          - email_username
+          - login_name
+          - user_email
+          - username
+        description: Email campaign names for customer journey touchpoints.
+        expr: EMAILNAME
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CZ_MULTI-CATEGORY_EMAIL_CS_CX-0-90-JOURNEY__Day-75_gjigy142 - 20250707_221750_NEW
+          - CZ_MULTI-CATEGORY_EMAIL_CS_CX-0-90-JOURNEY__Day-21_rkb917ib - 20250624_105656_NEW
+          - CZ_MULTI-CATEGORY_EMAIL_CS_CX-0-90-JOURNEY__Day-1_r6wyybld_NEW
+      - name: GIGYA_ID
+        synonyms:
+          - consumer_id
+          - customer
+          - lau
+          - recipient
+        description: Unique identifier for a user in the Gigya customer identity management platform.
+        expr: GIGYA_ID
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - 8b65ac81df8e47328ebf9cd92d6f5e13
+          - b8a1e839db594829bbfca4dcb306466b
+          - ad173014b4a64aaf9449a45cf049f3c3
+      - name: JOBID
+        synonyms:
+          - '"job id"'
+          - '"send id"'
+          - '"send_id"'
+        description: Unique identifier for a job id of a communication sendout
+        expr: JOBID
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - '1128685'
+          - '1128687'
+          - '1082322'
+    time_dimensions:
+      - name: SEND_DATE
+        synonyms:
+          - '"email send date"'
+          - '"email sent date"'
+          - dispatch_timestamp
+          - email_dispatch_dateemail_send_date
+          - email_dispatch_timestam
+          - email_sent_on
+          - event_date
+          - send_timestamp
+        description: Date on which the communication has been sent
+        expr: SEND_DATE
+        data_type: DATE
+        sample_values:
+          - '2025-05-27'
+          - '2025-07-07'
+          - '2025-05-04'
+    facts:
+      - name: EMAIL_BOUNCE
+        synonyms:
+          - bounced_email
+          - email_failed_delivery
+          - email_rejected
+          - email_returned
+          - undeliverable_email
+        description: Indicates whether an email sent to the customer bounced or not, where 1 represents a bounced email and 0 represents a successfully delivered email.
+        expr: EMAIL_BOUNCE
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '0'
+      - name: EMAIL_CLICK
+        synonyms:
+          - click_through
+          - email_activation
+          - email_interaction
+          - email_response
+          - link_click
+        description: Indicates whether the customer clicked on a link in an email sent by the analyst.
+        expr: EMAIL_CLICK
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '0'
+      - name: EMAIL_DELIVERED
+        synonyms:
+          - delivery_successful
+          - email_arrived
+          - email_received
+          - email_successfully_delivered
+          - message_delivered
+        description: Indicates whether an email was successfully delivered to the recipient.
+        expr: EMAIL_DELIVERED
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '0'
+      - name: EMAIL_OPEN
+        synonyms:
+          - email_opened
+          - email_opens
+          - email_read
+          - email_viewed
+          - opened_emails
+        description: Indicates whether the email was opened by the recipient (1) or not (0).
+        expr: EMAIL_OPEN
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '0'
+      - name: EMAIL_SENT
+        synonyms:
+          - '"emails sent to consumer"'
+          - '"emails sent"'
+        description: Number of emails sent to the consumer
+        expr: EMAIL_SENT
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+      - name: EMAIL_UNSUBSCRIBED
+        synonyms:
+          - email_opt_out
+          - email_unsubscribe_flag
+          - opted_out_emails
+          - unsubscribed_emails
+          - unsubscribed_status
+        description: Indicates whether the customer has unsubscribed from receiving emails.
+        expr: EMAIL_UNSUBSCRIBED
+        data_type: NUMBER(1,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '0'
+  - name: CORTEX_ANALYST_PILOT_PROMOTIONS
+    synonyms:
+      - '"campaigns"'
+      - '"promos"'
+      - '"promotions"'
+    base_table:
+      database: DB_CZSK_DP_QAS
+      schema: DP_COMMON_LAYER
+      table: CORTEX_ANALYST_PILOT_PROMOTIONS
+    dimensions:
+      - name: ORDER_NO
+        synonyms:
+          - invoice_number
+          - order_id
+          - order_number
+          - purchase_number
+          - transaction_id
+        description: Unique identifier for a promotion order.
+        expr: ORDER_NO
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CEGID_0GH0002510031
+          - DCE2_1031822044
+          - CEGID_04K0004810040
+      - name: PROMO_CODES
+        synonyms:
+          - coupon_codes
+          - discount_codes
+          - offer_ids
+          - promotion_ids
+          - voucher_numbers
+        description: List of unique promotion codes or offers provided to Cortex Analyst Pilot users, including loyalty program tiers, registration incentives, and hand-holding rewards.
+        expr: PROMO_CODES
+        data_type: ARRAY
+        sample_values:
+          - |-
+            [
+              "CZIQOSCLUBTIER100"
+            ]
+          - |-
+            [
+              "E-registration offer",
+              "Registration Offer 2017"
+            ]
+          - |-
+            [
+              "LO_ Hand Holding reward CZ__IDI_ Hand Hoding program CZ"
+            ]
+      - name: PROMO_DESCRIPTIONS
+        synonyms:
+          - discount_explanations
+          - offer_descriptions
+          - promotion_explanations
+          - promotional_details
+          - sales_promotion_descriptions
+        description: Description of promotions or offers provided to customers.
+        expr: PROMO_DESCRIPTIONS
+        data_type: ARRAY
+        sample_values:
+          - |-
+            [
+              "Coupon will provide 50% discount on cart"
+            ]
+          - '[]'
+          - |-
+            [
+              "Odměna za doporučení",
+              "Sleva na první IQOS 400Kč"
+            ]
+    primary_key:
+      columns:
+        - ORDER_NO
+  - name: DIM_CONSUMER
+    synonyms:
+      - consumer_data
+      - consumer_profile
+      - consumers
+      - customer_data
+      - customer_dimension
+      - customer_info
+      - customer_table
+    description: This table stores information about individual consumers, including their demographic details, registration information, and account status, providing a single source of truth for consumer data.
+    base_table:
+      database: DB_CZSK_PL_QAS
+      schema: DBT_CZ_B2C
+      table: DIM_CONSUMER
+    dimensions:
+      - name: CONSUMER_DWID
+        synonyms:
+          - '"consumer_id"'
+          - '"customer_id"'
+          - '"gigya id"'
+          - consumer_id
+          - customer_id
+          - gigya_id
+          - identity_identifier
+          - persona_identifier
+        description: Unique identifier for a consumer in the data warehouse.
+        expr: CONSUMER_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '1047687'
+          - '1047628'
+          - '1047749'
+      - name: CURRENT_AGE
+        synonyms:
+          - '"age of consumer"'
+          - '"consumer age"'
+          - '"current age"'
+        description: The age of the consumer at the time of data collection or a specific point in time, representing their current age.
+        expr: CURRENT_AGE
+        data_type: NUMBER(17,0)
+        sample_values:
+          - '63'
+          - '40'
+          - '76'
+      - name: GENDER
+        synonyms:
+          - biological_sex
+          - demographic
+          - male_female
+          - personal_gender
+          - sex
+        description: The gender of the consumer, either Male or Female.
+        expr: GENDER
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Male
+          - Female
+      - name: GIGYA_ID
+        description: Unique identifier of a consumer in form of GIGYA_ID
+        expr: GIGYA_ID
+        data_type: VARCHAR(16777216)
+      - name: GLOBAL_OPT_IN
+        synonyms:
+          - '"global marketing opt-in"'
+          - '"global opt-in"'
+          - '"marketing opt-in"'
+          - '"opt-in"'
+        description: Global marketing opt-in of consumer. Indicates whether the consumer provided consent to receive a CRM communication
+        expr: GLOBAL_OPT_IN
+        data_type: NUMBER(1,0)
+        sample_values:
+          - '1'
+          - '0'
+      - name: IS_DELETED
+        synonyms:
+          - deleted_flag
+          - is_archived
+          - is_inactive
+          - is_removed
+          - record_status
+        description: Indicates whether a consumer record/account has been deleted or not.
+        expr: IS_DELETED
+        data_type: NUMBER(1,0)
+        sample_values:
+          - '1'
+          - '0'
+    facts:
+      - name: CONSUMERS
+        synonyms:
+          - consumers
+          - LAUS
+          - purchasers
+        description: Number of consumers in consumer table
+        expr: GIGYA_ID
+        data_type: VARCHAR(16777216)
+        access_modifier: public_access
+        default_aggregation: 6
+    primary_key:
+      columns:
+        - CONSUMER_DWID
+    unique_keys:
+      - columns:
+          - GIGYA_ID
+  - name: DIM_PRODUCT
+    synonyms:
+      - product_catalog
+      - product_dimension
+      - product_directory
+      - product_info
+      - product_master
+      - product_table
+    description: This table stores information about products, including their unique identifier, category, platform, brand, product group, name, version, color, packaging details, and update timestamps, serving as a single source of truth for product data.
+    base_table:
+      database: DB_CZSK_PL_QAS
+      schema: DBT_CZ_B2C
+      table: DIM_PRODUCT
+    dimensions:
+      - name: BRAND
+        synonyms:
+          - '"device type"'
+          - label
+          - maker
+          - manufacturer
+          - marque
+          - nameplate
+          - trademark
+        description: The brand of the product, representing the distinct product lines offered by the company, such as VEEV NOW, IQOS, and HEETS, which are likely e-cigarette or heated tobacco product brands.
+        expr: BRAND
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - VEEV NOW
+          - VEEV NOW ULTRA
+          - IQOS
+          - HEETS
+          - TEREA
+          - FIIT
+          - ILUMA
+          - LIL
+          - ZYN
+      - name: CATEGORY
+        synonyms:
+          - '"'
+          - '"product class"'
+          - '"product kind"'
+          - '"product_class"'
+          - '"product_group"'
+          - classification
+          - p
+          - product_class
+        description: 'The category of the product, which can be one of the following: Accessories (e.g. cases, device doors, device rings), Device (e.g. IQOS,ILUMA,LIL,VEEV), or Consumables (e.g. TEREA,FIIT,HEETS, VEEV PODS, DELIA, LEVIA).'
+        expr: CATEGORY
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Device
+          - Accessories
+          - Consumables
+        is_enum: false
+      - name: CODE
+        synonyms:
+          - product code
+          - product id
+          - product identifier
+          - product_code
+        description: Primary key of dim_product
+        expr: CODE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - G0000578
+          - G0000496
+          - G0001297
+      - name: COLOR
+        synonyms:
+          - chroma
+          - colour
+          - dye
+          - hue
+          - pigment
+          - shade
+          - tint
+          - tone
+        description: The color of the product.
+        expr: COLOR
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - COOL MINT
+          - NEW INDIGO
+          - SAGE GREEN
+      - name: NAME
+        synonyms:
+          - designation
+          - item_name
+          - product_label
+          - product_name
+          - product_title
+        description: This column stores the names of various products offered by the company, including device accessories and bundles.
+        expr: NAME
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - VEEV One Passion Fruit Kiwi Guava 1.8% 2 pods pack
+          - LEVIA GLACIAL BEAT / BLUE PACK
+          - IQOS ILUMA i PRIME Midnight Black Kit
+      - name: PLATFORM
+        synonyms:
+          - ecosystem
+          - environment
+          - infrastructure
+          - operating_system
+          - os
+          - system_type
+          - tech_stack
+        description: 'The PLATFORM dimension represents the type of product platform, which can be one of the following: P1, P4 disposable, or P5, indicating the specific product platform or category.'
+        expr: PLATFORM
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - P1
+          - P4 disposable
+          - P5
+      - name: PRODUCT_DWID
+        synonyms:
+          - product_id
+          - product_identifier
+          - product_key
+          - product_reference_id
+          - product_unique_id
+        description: Unique identifier for a product in the data warehouse.
+        expr: PRODUCT_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '182'
+          - '161'
+          - '160'
+      - name: PRODUCT_GROUP
+        synonyms:
+          - product_category
+          - product_family
+          - product_line
+          - product_segment
+          - product_type
+        description: This column stores the category or classification of a product, providing a way to group similar products together for analysis and reporting purposes.
+        expr: PRODUCT_GROUP
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - VEEV NOW WATERMELON (bundle)
+          - VEEV One Strawberry 2 pods pack
+          - VEEV ONE PODS MAUVE (bundle)
+      - name: UNIT
+        synonyms:
+          - measurement_unit
+          - quantity_unit
+          - unit_description
+          - unit_name
+          - unit_of_measurement
+          - unit_type
+        description: Unit of measurement for the product, indicating whether it is sold in Packs (PK), Pieces (PCE), or Containers (CT).
+        expr: UNIT
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - PK
+          - PCE
+          - CT
+      - name: VERSION
+        synonyms:
+          - build
+          - edition
+          - iteration
+          - release
+          - revision
+          - update
+        description: The VERSION column represents the specific iteration or release of a product, capturing the unique identifier or name assigned to each product variant, such as a software version number or a product line name.
+        expr: VERSION
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - IQOS 3
+          - VEEV INPRIME
+          - lil SOLID 2.0
+    facts:
+      - name: PIECES_IN_PACKAGE
+        synonyms:
+          - items_per_pack
+          - pack_size
+          - package_quantity
+          - quantity_per_package
+          - units_per_package
+        description: The number of individual items or units contained within a single package of a product.
+        expr: PIECES_IN_PACKAGE
+        data_type: NUMBER(38,5)
+        access_modifier: public_access
+        sample_values:
+          - '20.00000'
+          - '10.00000'
+          - '100.00000'
+    primary_key:
+      columns:
+        - PRODUCT_DWID
+  - name: DIM_USER
+    synonyms:
+      - user_data
+      - user_details
+      - user_dimension
+      - user_profile
+      - user_table
+      - users
+    description: This table stores information about users, including their username, profile, name, and organizational details such as business region, territory, and channel, as well as their full-time equivalent (FTE) status. The table is designed to track changes to user information over time, with valid from and to timestamps indicating the period during which each set of attributes was applicable.
+    base_table:
+      database: DB_CZSK_PL_QAS
+      schema: DBT_CZ_B2C
+      table: DIM_USER
+    dimensions:
+      - name: CHANNEL
+        synonyms:
+          - '"direct retail"'
+          - '"e-comm""e-commerce"'
+          - communication_channel
+          - distribution_channel
+          - marketing_channel
+          - medium
+          - outlet
+          - platform
+          - sales_channel
+        description: The CHANNEL dimension represents the different sales channels through which customers interact with the company, including direct retail, indirect retail with sales engineers, and sales force product ambassadors.
+        expr: CHANNEL
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - Direct Retail
+          - Indirect Retail w/ SE
+          - SFP Ambassadors
+      - name: USER_DWID
+        synonyms:
+          - dw_user_id
+          - unique_user_id
+          - user_id
+          - user_identifier
+          - user_key
+          - user_reference_id
+        description: Unique identifier for a user in the data warehouse.
+        expr: USER_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '759571'
+          - '759695'
+          - '759733'
+      - name: USERNAME
+        synonyms:
+          - purchased via
+          - seller
+          - user
+        description: Unique identifier for a user in the system, typically used to track and analyze user-specific data.
+        expr: USERNAME
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CZ0002482616
+          - CZ0002483300
+          - CZ0002483533
+    primary_key:
+      columns:
+        - USER_DWID
+  - name: FACT_KIT_PURCHASE
+    synonyms:
+      - '"purchased devices"'
+      - '"purchased kits"'
+      - devices
+      - kits
+    description: 'Contains information about sold kits/devices that covers P1 and P4 purchase data. '
+    base_table:
+      database: DB_CZSK_PL_QAS
+      schema: DBT_CZ_B2C
+      table: FACT_KIT_PURCHASE
+    dimensions:
+      - name: CONSUMER_DWID
+        synonyms:
+          - buyer_id
+          - client_identifier
+          - consumer_key
+          - customer_id
+          - user_id
+        description: Surrogate key to connect a dimension. Automatically generated, changes with every load. Provides detailed information about the consumer who made the order.
+        expr: CONSUMER_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '1208849'
+          - '1026866'
+          - '983778'
+      - name: DATA_SOURCE
+        synonyms:
+          - data_origin
+          - data_provenance
+          - source_identifier
+          - source_system
+          - system_identifier
+        description: Identificator of the source system. Indicates primary data source for obtaining the purchase data
+        expr: DATA_SOURCE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - DCE2 - Cegid
+          - DCE2 - SDD Orders
+          - Legacy - PurchaseData
+      - name: ITEM_NUMBER
+        synonyms:
+          - item_code
+          - item_id
+          - item_identifier
+          - item_key
+          - order_item_number
+          - product_item_number
+        description: Identifier of an item within the order. Mandatory field.
+        expr: ITEM_NUMBER
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+      - name: KIT_PURCHASE_DWID
+        synonyms:
+          - kit_purchase_id
+          - kit_purchase_identifier
+          - kit_purchase_key
+          - kit_purchase_surrogate_key
+          - kit_purchase_unique_id
+        description: Primary key of the fact table. Automatically generated, changes with every load.
+        expr: KIT_PURCHASE_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '87005'
+          - '953956'
+          - '436837'
+      - name: OPT_IN_ON_TRANSACTION
+        synonyms:
+          - consumer_opt_in_status
+          - opted_in_at_transaction
+          - opted_in_during_transaction
+          - transaction_opt_in
+          - transaction_opt_in_flag
+        description: Flag if the consumer had opt-in at the time of the transaction.
+        expr: OPT_IN_ON_TRANSACTION
+        data_type: NUMBER(1,0)
+        sample_values:
+          - '1'
+          - '0'
+      - name: ORDER_NO
+        synonyms:
+          - order_id
+          - order_identifier
+          - order_reference
+          - purchase_order_number
+          - transaction_id
+        description: Unique identifier of the order with the prefix of the data source. Mandatory field.
+        expr: ORDER_NO
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - DMW_01257914
+          - DMW_01258335
+          - DMW_01259371
+      - name: ORDER_REASON
+        synonyms:
+          - order_cause
+          - order_description
+          - order_explanation
+          - order_purpose
+          - reason_for_order
+        description: "Contain a more granular description for an order in conjunction with the Order Type. Ex: Return to Sender: Lending Device. Following order reasons are known from the global documentation:\r\n\r\n| Reason Code | Description                                                                                                                                            |\r\n| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |\r\n| R01         | Customer Order, Forward - Consumer orders                                                                                                              |\r\n| R03         | Replacement - Faulty Devices FITO, Replacement - Replacement of faulty devices                                                                         |\r\n| R04         | Replacement - Faulty Devices FOTI, Replacement - First old device received back from consumer, then new device given to consumer                       |\r\n| R05         | Replacement - Faulty Accessories FONI, Replacement - Replacement of faulty devices                                                                     |\r\n| R08         | Return - Online Sales, Return - First new device given to consumer, then old device back from consumer                                                 |\r\n| R09         | Return - Offline Sales, Return - Normally, applicable for holder and charger                                                                           |\r\n| R13         | Under Delivered - Corrective Delivery, Forward - First new accessory given to consumer, no product back from consumer                                  |\r\n| R14         | Under Delivered - Partial Refund, Return - Return of products originally purchased online with refund to consumer                                      |\r\n| R16         | Return to Sender - Consumer Order (R01), Return - Should be referenced to original e-Com order                                                         |\r\n| R23         | Return to Sender - Acessories FONI (R05), Return - In case of missing items in delivered order                                                         |\r\n| R26         | Return to Sender - Devices (R03 and R04), Return - Consumer accepts to get additional delivery of missing items                                        |\r\n| R27         | Paid Lending - Device kept by consumer.                                                                                                                |\r\n| R28         | Paid Lending - Return of lent device in case consumer decides not to keep lent device after lending period. To be referenced to original lending order |\r\n| R29         | Paid Lending - Lending order creation                                                                                                                  |\r\n| R30         | Return to Sender - Lending Order, In case original lending order cannot be delivered                                                                   |\r\n| R90         | Burning coupon, used by retailer when using a coupon                                                                                                   |"
+        expr: ORDER_REASON
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - R01
+          - R27
+      - name: ORDER_TYPE
+        synonyms:
+          - order_category
+          - order_classification
+          - purchase_type
+          - sales_order_type
+          - transaction_type
+        description: "Main type of the order. Following order types are known from the global documentation:\r\n\r\n| Code    | Description                         | Comment                                                                                            |\r\n| ------- | ----------------------------------- | -------------------------------------------------------------------------------------------------- |\r\n| FCD     | Field Coach Delivery                | Field Coach Delivery ( It is related to product transfer orders and not consumer sales orders )    |\r\n| IRD     | Indirect Retail Delivery            | Indirect Retail Delivery (These are consignment stock order AND NOT Consumer raised sales orders ) |\r\n| PPL_ZL2 | PPL Confirm Lending Order           | order type used only temporary before placeOrder happens.                                          |\r\n| PPL_ZLD | PPL Lending Order                   | order type used only temporary before placeOrder happens.                                          |\r\n| PPL_ZTA | PPL Sales Order                     | order type used only temporary before placeOrder happens.                                          |\r\n| ZAD     | Auto Delivery                       | Auto Delivery (INACTIVE)                                                                           |\r\n| ZBC     | Burning coupon Order                |                                                                                                    |\r\n| ZD2     | Debit Note - Successful payment     | Trade-in (INACTIVE)                                                                                |\r\n| ZD3     | Debit Note - Failed payment         | Trade-in (INACTIVE)                                                                                |\r\n| ZDE     | Device Link Order                   | by the retailer                                                                                    |\r\n| ZFG     | Sales Order With Free Goods         |                                                                                                    |\r\n| ZKL     | Replacement Order / Order for Free  |                                                                                                    |\r\n| ZL2     | Confirm Lending Order               | Consumer keeps goods                                                                               |\r\n| ZL3     | Transient Lending Order             | Consumer keeps goods without payment                                                               |\r\n| ZLD     | Lending Order                       | Consumer starts the lending journey, hasn't bought the device yet                                  |\r\n| ZLR     | Lending in Retailers                | ONLY for SAP                                                                                       |\r\n| ZRA     | Return Order                        |                                                                                                    |\r\n| ZRF     | Refund delivery order               | R14 Refund                                                                                         |\r\n| ZRS     | Corrective delivery order           | R13 Resend/reorder missing items                                                                   |\r\n| ZTA     | Sales Order                         |                                                                                                    |\r\n| ZTR     | Forward Order                       | Trade-in (INACTIVE .\"\"ZUP\"\" used instead)                                                          |\r\n| ZUP     | Replacement Upgrade, Trade-In       |                                                                                                    |"
+        expr: ORDER_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - ZL2
+          - ZDE
+          - ZUP
+      - name: PRODUCT_DWID
+        synonyms:
+          - product_dimension_key
+          - product_id
+          - product_key
+          - product_reference
+          - product_surrogate_key
+        description: Surrogate key to connect a dimension. Automatically generated, changes with every load. Provides detailed information about the purchased product.
+        expr: PRODUCT_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '241'
+          - '155'
+          - '5'
+      - name: PURCHASE_CATEGORY
+        synonyms:
+          - '"kit to LAS"'
+          - '"kit to LAU"'
+          - acquisition
+          - purchase_group
+        description: Indicates if the purchase was done by LAS or LAU. LAS is consumer without prior device purchase and LAU is consumer with prior device purchase
+        expr: PURCHASE_CATEGORY
+        data_type: VARCHAR(19)
+        sample_values:
+          - Kit to LAU (P1, P4)
+          - Kit to LAU (P1)
+          - Kit to LAU (P4)
+      - name: PURCHASE_SUBCATEGORY
+        synonyms:
+          - purchase_sub_category_type
+          - purchase_sub_class
+          - purchase_sub_group
+          - purchase_sub_segment
+          - purchase_sub_type
+        description: Indicates if the purchase was done by LAS or LAU and subcategory based on prior purchased devices
+        expr: PURCHASE_SUBCATEGORY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Kit to LAU (ILUMA, LIL, VEEV)
+          - Kit to LAS (no RRP)
+          - Kit to LAU (IQOS, VEEV)
+      - name: USER_DWID_REPORTING
+        synonyms:
+          - reporting_user_id
+          - sales_user_id
+          - seller_dw_id
+          - transaction_user_id
+          - user_key_reporting
+        description: Unique identifier for the user in the reporting system.
+        expr: USER_DWID_REPORTING
+        data_type: NUMBER(18,0)
+    time_dimensions:
+      - name: ORDER_DATETIME
+        synonyms:
+          - '"device purchase date"'
+          - '"first device purchase"'
+          - '"first kit purchase"'
+          - '"kit purchase date"'
+        description: Timestamp when the order was placed.
+        expr: ORDER_DATETIME
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - 2020-12-27T17:43:14.000+0000
+          - 2021-04-19T13:01:46.000+0000
+          - 2021-04-19T13:05:44.000+0000
+    facts:
+      - name: PURCHASE_NUMBER_BRAND
+        synonyms:
+          - brand_kit_purchase_number
+          - brand_purchase_sequence
+          - brand_specific_purchase_number
+          - kit_purchase_number_per_brand
+          - purchase_count_per_brand
+        description: Indicates which kit purchase (number) the kit was, per brand.
+        expr: PURCHASE_NUMBER_BRAND
+        data_type: NUMBER(18,0)
+        access_modifier: public_access
+        sample_values:
+          - '2'
+          - '1'
+          - '3'
+      - name: PURCHASE_NUMBER_PLATFORM
+        synonyms:
+          - kit_purchase_id_per_platform
+          - kit_purchase_number_per_platform
+          - platform_purchase_number
+          - platform_specific_purchase_number
+          - purchase_number_per_channel
+        description: Indicates which kit purchase (number) the kit was, per platform.
+        expr: PURCHASE_NUMBER_PLATFORM
+        data_type: NUMBER(18,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+      - name: PURCHASE_NUMBER_TOTAL
+        synonyms:
+          - cumulative_kit_purchase_number
+          - kit_purchase_number_across_all_platforms
+          - overall_kit_purchase_count
+          - total_kit_purchase_number
+          - total_kit_purchases_across_platforms
+        description: Indicates which kit purchase (number) the kit was, across all platforms.
+        expr: PURCHASE_NUMBER_TOTAL
+        data_type: NUMBER(18,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '2'
+          - '3'
+    primary_key:
+      columns:
+        - KIT_PURCHASE_DWID
+    unique_keys:
+      - columns:
+          - ORDER_NO
+  - name: FACT_SALE
+    synonyms:
+      - customer_purchases
+      - offtake_sales
+      - order_details
+      - orders
+      - sale_orders
+      - sales
+      - sales_data
+      - transaction_data
+      - transaction_records
+    description: Table dedicated for reporting sale orders.  Contains all types of offtake sales. Combines legacy DCE1 data from Demandware and RAAS together with DCE2 and Cegid data. DCE2 RAAS data for Indirect retail are taken from linking device interactions.
+    base_table:
+      database: DB_CZSK_PL_QAS
+      schema: DBT_CZ_B2C
+      table: FACT_SALE
+    dimensions:
+      - name: CONSUMER_DWID
+        synonyms:
+          - account_dwid
+          - buyer_id
+          - client_dwid
+          - consumer_id
+          - customer_key
+          - user_id
+        description: Surrogate key to connect a dimension. Automatically generated, changes with every load. Provides detailed information about the consumer who made the order.
+        expr: CONSUMER_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '133799'
+          - '449121'
+          - '691307'
+      - name: ORDER_NO
+        synonyms:
+          - order_id
+          - order_number
+          - purchase_order_number
+          - sales_order_number
+          - transaction_id
+          - unique_order_identifier
+        description: Unique identifier of the order with the prefix of the data source. Mandatory field.
+        expr: ORDER_NO
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - CEGID_0500092510060
+          - CEGID_0JE0038810028
+          - CEGID_0PT0016010022
+      - name: ORDER_TYPE
+        synonyms:
+          - order_category
+          - order_classification
+          - purchase_type
+          - sales_order_type
+          - transaction_type
+        description: "Main type of the order. Following order types are known from the global documentation:\r\n\r\n| Code    | Description                         | Comment                                                                                            |\r\n| ------- | ----------------------------------- | -------------------------------------------------------------------------------------------------- |\r\n| FCD     | Field Coach Delivery                | Field Coach Delivery ( It is related to product transfer orders and not consumer sales orders )    |\r\n| IRD     | Indirect Retail Delivery            | Indirect Retail Delivery (These are consignment stock order AND NOT Consumer raised sales orders ) |\r\n| PPL_ZL2 | PPL Confirm Lending Order           | order type used only temporary before placeOrder happens.                                          |\r\n| PPL_ZLD | PPL Lending Order                   | order type used only temporary before placeOrder happens.                                          |\r\n| PPL_ZTA | PPL Sales Order                     | order type used only temporary before placeOrder happens.                                          |\r\n| ZAD     | Auto Delivery                       | Auto Delivery (INACTIVE)                                                                           |\r\n| ZBC     | Burning coupon Order                |                                                                                                    |\r\n| ZD2     | Debit Note - Successful payment     | Trade-in (INACTIVE)                                                                                |\r\n| ZD3     | Debit Note - Failed payment         | Trade-in (INACTIVE)                                                                                |\r\n| ZDE     | Device Link Order                   | by the retailer                                                                                    |\r\n| ZFG     | Sales Order With Free Goods         |                                                                                                    |\r\n| ZKL     | Replacement Order / Order for Free  |                                                                                                    |\r\n| ZL2     | Confirm Lending Order               | Consumer keeps goods                                                                               |\r\n| ZL3     | Transient Lending Order             | Consumer keeps goods without payment                                                               |\r\n| ZLD     | Lending Order                       | Consumer starts the lending journey, hasn't bought the device yet                                  |\r\n| ZLR     | Lending in Retailers                | ONLY for SAP                                                                                       |\r\n| ZRA     | Return Order                        |                                                                                                    |\r\n| ZRF     | Refund delivery order               | R14 Refund                                                                                         |\r\n| ZRS     | Corrective delivery order           | R13 Resend/reorder missing items                                                                   |\r\n| ZTA     | Sales Order                         |                                                                                                    |\r\n| ZTR     | Forward Order                       | Trade-in (INACTIVE .\"\"ZUP\"\" used instead)                                                          |\r\n| ZUP     | Replacement Upgrade, Trade-In       |                                                                                                    |"
+        expr: ORDER_TYPE
+        data_type: VARCHAR(16777216) COLLATE 'en-ci'
+        sample_values:
+          - ZDE
+          - ZKL
+          - ZUP
+      - name: PRODUCT_DWID
+        synonyms:
+          - product_dimension_key
+          - product_identifier
+          - product_key
+          - product_reference_id
+          - product_surrogate_key
+        description: Surrogate key to connect a dimension. Automatically generated, changes with every load. Provides detailed information about the purchased product.
+        expr: PRODUCT_DWID
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '527'
+          - '172'
+          - '317'
+      - name: PURCHASE_FREQUENCY_OWN_CHANNELS
+        synonyms:
+          - purchase_frequency_own_channel
+          - purchase_frequency_own_platform
+          - purchase_frequency_own_sales_channel
+          - purchase_frequency_own_store
+          - purchase_frequency_own_website
+        description: Identifier if the consumer is frequently shopping in any of our own channels, or only seldomly or came back after long time.
+        expr: PURCHASE_FREQUENCY_OWN_CHANNELS
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Regular
+          - Returning after long time
+      - name: PURCHASE_FREQUENCY_SINGLE_CHANNEL
+        synonyms:
+          - channel_purchase_frequency
+          - purchase_frequency_per_channel
+          - purchase_recurrence_single_channel
+          - single_channel_buying_frequency
+          - single_channel_purchase_frequency
+        description: Identifier if the consumer is frequently shopping in the given purchase channel, or only seldomly or came back after long time.
+        expr: PURCHASE_FREQUENCY_SINGLE_CHANNEL
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Returning after long time
+          - Regular
+      - name: REPORTING_QUALIFIED
+        synonyms:
+          - qualified_transaction
+          - reportable_sale
+          - reported_sale
+          - valid_order
+          - valid_sale
+        description: Flag if the sale is considered valid for being reported as sale. It is based on the selected order and delivery statuses, plus must not be returned.
+        expr: REPORTING_QUALIFIED
+        data_type: NUMBER(1,0)
+        sample_values:
+          - '1'
+          - '0'
+      - name: RETURNED_BY_CONSUMER
+        synonyms:
+          - consumer_returned
+          - customer_return_flag
+          - item_returned
+          - returned_by_customer
+          - returned_to_seller
+        description: Flag if the item was returned by the consumer (for sales only).
+        expr: RETURNED_BY_CONSUMER
+        data_type: NUMBER(1,0)
+        sample_values:
+          - '1'
+          - '0'
+      - name: SALE_DW_ID
+        synonyms:
+          - '"sales id"'
+        description: Unique identifier of sale
+        expr: SALE_DWID
+        data_type: NUMBER(18,0)
+        unique: true
+      - name: USER_DWID_REPORTING
+        synonyms:
+          - reported_by_user_id
+          - reporting_user_id
+          - salesperson_id
+          - seller_id
+          - user_key_reporting
+        description: Surrogate key to connect a dimension. Automatically generated, changes with every load. Provides detailed information about the user reported as the seller of the order.
+        expr: USER_DWID_REPORTING
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '620448'
+          - '674033'
+          - '752424'
+    time_dimensions:
+      - name: ORDER_DATETIME
+        synonyms:
+          - order_creation_time
+          - order_initiation_time
+          - order_placement_time
+          - order_submission_time
+          - order_timestamp
+        description: Timestamp when the order was placed.
+        expr: ORDER_DATETIME
+        data_type: TIMESTAMP_NTZ(9)
+        sample_values:
+          - 2024-05-24T19:39:50.000+0000
+          - 2024-05-24T19:46:17.000+0000
+          - 2024-05-24T19:40:05.000+0000
+    facts:
+      - name: PRICE_ITEM_AFTER_DISCOUNT
+        synonyms:
+          - discounted_item_price
+          - item_price_after_all_discounts
+          - item_price_after_discount
+          - item_price_excluding_shipping
+          - net_item_price
+        description: Total value of the item AFTER all discounts (incl. apportioned header discounts), incl. taxes, excl. shipping.
+        expr: PRICE_ITEM_AFTER_DISCOUNT
+        data_type: NUMBER(38,2)
+        access_modifier: public_access
+        sample_values:
+          - '900.00'
+          - '128.11'
+          - '200.00'
+      - name: PRICE_ITEM_DISCOUNT
+        synonyms:
+          - discount_applied
+          - discount_value
+          - item_discount_amount
+          - item_savings
+          - price_reduction
+        description: Total value of all discounts applied on the item (incl. apportioned header discounts), incl. taxes.
+        expr: PRICE_ITEM_DISCOUNT
+        data_type: NUMBER(38,2)
+        access_modifier: public_access
+        sample_values:
+          - '536.00'
+          - '176.83'
+          - '179.58'
+      - name: PRICE_ITEM_TOTAL
+        synonyms:
+          - item_total_amount
+          - item_total_value
+          - total_item_cost
+          - total_item_price
+          - total_item_value_including_taxes
+        description: Total value of the item AFTER all discounts (incl. apportioned header discounts), incl. taxes, incl. shipping, incl. Cash on Delivery fee.
+        expr: PRICE_ITEM_TOTAL
+        data_type: NUMBER(38,2)
+        access_modifier: public_access
+        sample_values:
+          - '228.79'
+          - '39.00'
+          - '890.00'
+      - name: QUANTITY
+        synonyms:
+          - amount
+          - count
+          - item_count
+          - number_of_items
+          - quantity_ordered
+        description: Quantity of the item.
+        expr: QUANTITY
+        data_type: NUMBER(38,0)
+        access_modifier: public_access
+        sample_values:
+          - '1'
+          - '10'
+          - '2'
+    metrics:
+      - name: PURCHASERS
+        synonyms:
+          - buyers
+          - clients
+          - consumers
+          - customers
+          - laus
+          - shoppers
+        description: The number of individuals that have made a purchase.
+        expr: COUNT(consumer_dwid)
+        access_modifier: public_access
+    primary_key:
+      columns:
+        - SALE_DWID
+    unique_keys:
+      - columns:
+          - ORDER_NO
+      - columns:
+          - SALE_DW_ID
+relationships:
+  - name: DIM_CONSUMER_CRM
+    left_table: CORTEX_ANALYST_PILOT_CRM
+    right_table: DIM_CONSUMER
+    relationship_columns:
+      - left_column: GIGYA_ID
+        right_column: GIGYA_ID
+  - name: FACT_KIT_PURCHASE_DIM_CONSUMER
+    left_table: FACT_KIT_PURCHASE
+    right_table: DIM_CONSUMER
+    relationship_columns:
+      - left_column: CONSUMER_DWID
+        right_column: CONSUMER_DWID
+  - name: FACT_KIT_PURCHASE_DIM_PRODUCT
+    left_table: FACT_KIT_PURCHASE
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: PRODUCT_DWID
+        right_column: PRODUCT_DWID
+  - name: FACT_KIT_PURCHASE_DIM_USER
+    left_table: FACT_KIT_PURCHASE
+    right_table: DIM_USER
+    relationship_columns:
+      - left_column: USER_DWID_REPORTING
+        right_column: USER_DWID
+  - name: FACTSALE_DIMCONSUMER
+    left_table: FACT_SALE
+    right_table: DIM_CONSUMER
+    relationship_columns:
+      - left_column: CONSUMER_DWID
+        right_column: CONSUMER_DWID
+  - name: FACTSALE_DIMPRODUCT
+    left_table: FACT_SALE
+    right_table: DIM_PRODUCT
+    relationship_columns:
+      - left_column: PRODUCT_DWID
+        right_column: PRODUCT_DWID
+  - name: FACTSALE_DIMUSER
+    left_table: FACT_SALE
+    right_table: DIM_USER
+    relationship_columns:
+      - left_column: USER_DWID_REPORTING
+        right_column: USER_DWID
+  - name: FACT_SALE_PROMOTIONS
+    left_table: FACT_SALE
+    right_table: CORTEX_ANALYST_PILOT_PROMOTIONS
+    relationship_columns:
+      - left_column: ORDER_NO
+        right_column: ORDER_NO
+verified_queries:
+  - name: P5 ZYN cans sold
+    question: What is the number of ZYN (P5) cans sold in 2025
+    sql: |-
+      SELECT
+        SUM(fs.quantity * dp.pieces_in_package) AS zyn_cans_sold
+      FROM
+        fact_sale AS fs
+        JOIN dim_product AS dp ON fs.product_dwid = dp.product_dwid
+      WHERE
+        dp.platform = 'P5'
+        AND dp.category = 'Consumables'
+        AND DATE_PART('YEAR', fs.order_datetime) = 2025
+        AND fs.reporting_qualified = 1
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1757070777
+  - name: What is the amount of VEEV pods sold in 2025 by platform and brand? (Include P4 disposable)
+    question: What is the amount of VEEV pods sold in 2025 by platform and brand? (Include P4 disposable)
+    sql: |-
+      SELECT
+        PLATFORM,
+        BRAND,
+        SUM(fs.quantity * dp.pieces_in_package) AS VEEV_PODS_SOLD
+      FROM
+        fact_sale AS fs
+      JOIN dim_product AS dp ON fs.product_dwid = dp.product_dwid
+      WHERE
+        dp.platform in ('P4','P4 disposable')
+        AND dp.category = 'Consumables'
+        AND DATE_PART('YEAR', fs.order_datetime) = 2025
+        AND fs.reporting_qualified = 1
+      GROUP BY PLATFORM,BRAND
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755608154
+  - name: What is the number of P1 consumables sold in 2025
+    question: What is the number of P1 consumables sold in 2025
+    sql: |-
+      SELECT
+        PLATFORM,
+        BRAND,
+        SUM(fs.quantity * dp.pieces_in_package) AS p1_sticks_volume_sold
+      FROM
+        fact_sale AS fs
+      JOIN dim_product AS dp ON fs.product_dwid = dp.product_dwid
+      WHERE
+        dp.platform = 'P1'
+        AND dp.category = 'Consumables'
+        AND DATE_PART('YEAR', fs.order_datetime) = 2025
+        AND fs.reporting_qualified = 1
+      GROUP BY PLATFORM,BRAND
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755608240
+  - name: What is the number of P1 devices sold in 2025 by brand?
+    question: What is the number of P1 devices sold in 2025 by brand?
+    sql: |-
+      SELECT
+        BRAND,
+        SUM(fs.quantity) AS p1_devices_sold
+      FROM
+        fact_sale AS fs
+      JOIN dim_product AS dp ON fs.product_dwid = dp.product_dwid
+      WHERE
+        dp.platform = 'P1'
+        AND dp.category = 'Device'
+        AND DATE_PART('YEAR', fs.order_datetime) = 2025
+        AND fs.reporting_qualified = 1
+      GROUP BY BRAND
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755608326
+  - name: What is the AVG email open rate of email recipients?
+    question: What is the AVG email open rate of email recipients?
+    sql: |-
+      SELECT 
+          AVG(EMAIL_OR) AS AVG_EMAIL_OPEN_RATE
+      FROM (
+          SELECT
+              GIGYA_ID,
+              SUM(EMAIL_OPEN)/NULLIF(NULLIF(SUM(EMAIL_DELIVERED), 0), 0) AS EMAIL_OR
+          FROM CORTEX_ANALYST_PILOT_CRM
+          GROUP BY GIGYA_ID
+      )
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755612721
+  - name: What is a email open rate of all emails sent?
+    question: What is a email open rate of all emails sent?
+    sql: |-
+      SELECT
+              SUM(EMAIL_OPEN)/NULLIF(NULLIF(SUM(EMAIL_DELIVERED), 0), 0) AS EMAIL_OR
+      FROM CORTEX_ANALYST_PILOT_CRM
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755612772
+  - name: What is number of opted-in consumers (global_opt_in) in consumer database? This number includes all consumers including leads (consumers without purchase)
+    question: What is number of opted-in consumers (global_opt_in) in consumer database? This number includes all consumers including leads (consumers without purchase)
+    sql: |-
+      SELECT
+        COUNT(DISTINCT consumer_dwid) AS opted_in_consumers
+      FROM
+        dim_consumer
+      WHERE
+        global_opt_in = 1
+        AND is_deleted = 0
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755613864
+  - name: What are the top 5 promotions in terms of number of unique orders created with it?
+    question: What are the top 5 promotions in terms of number of unique orders created with it?
+    sql: WITH exploded AS (SELECT s.order_no, CAST(f.value AS TEXT) AS promo_code FROM __fact_sale AS s JOIN __cortex_analyst_pilot_promotions AS p ON s.order_no = p.order_no, LATERAL FLATTEN(input => p.promo_codes) AS f(seq, key, path, index, value, this)) SELECT promo_code, COUNT(DISTINCT order_no) AS unique_orders FROM exploded GROUP BY promo_code ORDER BY unique_orders DESC LIMIT 5
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755764273
+  - name: Calculate number of purchasers between '2017-09-01' and '2017-12-31'
+    question: Calculate number of purchasers between '2017-09-01' and '2017-12-31'
+    sql: |-
+      SELECT
+        COUNT(DISTINCT fs.consumer_dwid) AS UNIQUE_PURCHASERS
+      FROM
+        fact_sale AS fs
+      WHERE
+        fs.order_datetime::date BETWEEN '2017-09-01'
+        AND '2017-12-31'
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755780835
+  - name: What is the number of kit sales between January 1st and May 1st 2025?
+    question: What is the number of kit sales between January 1st and May 1st 2025?
+    sql: |-
+      SELECT COUNT(*) AS KIT_SALES
+      FROM FACT_KIT_PURCHASE
+      WHERE order_datetime::date BETWEEN '2025-01-01' AND '2025-05-01'
+    use_as_onboarding_question: false
+    verified_by: Josef Horak
+    verified_at: 1755781259
+custom_instructions: "For sales related data: \n\n• When asked for sales, number of sold products or purchases calculate following outputs: number of unique orders, number of unique purchasers and sold goods (quantity * pieces_in_package)\t\n• When analyzing number of sales from FACT_SALE always apply condition reporting_qualified = 1 unless return orders and incomplete orders are expected\n•\tWhen analyzing number device or kit sales use table FACT_KIT_PURCHASE and apply condition DIM_PRODUCT.CATEGORY = ‘Device’\n•\tWhen analyzing consumable, sticks, pods, pack or bundle sales use table FACT_SALE and apply condition DIM_PRODUCT.CATEGORY = ‘Consumables’\n•\tWhen analyzing accessories sales use table FACT_SALE and apply condition DIM_PRODUCT.CATEGORY = ‘Accessories’\n•\tWhen analyzing consumables sales calculate the volume by default as SUM(quantity*pieces_in_package) and provide the disclaimer that volume has been calculated in P1 sticks and P4 pods\n•\tWhen analyzing consumable sales never combine different DIM_PRODUCT.PLATFORM values and always split the volumes by DIM_PRODUCT.PLATFORMS\n•\tWhen calculating number of sold P4 consumables consider platform in ('P4','P4 disposable') \n•\tWhen calculating number of sold packs filter unit = 'PK' in DIM_PRODUCT \n•\tWhen calculating number of sold bundles or cartons filter unit = 'CT' in DIM_PRODUCT\n•\tWhen calculating number of sold P4 consumables consider platform in ('P4','P4 disposable')\n•\tWhen calculating number of sold products never combine different product categories (devices and consumables)\n•\tWhen working with order_datetime convert the datetime to date\n\n\nFor CRM related data: \n•\tWhen calculating email delivery rate calculate it as SUM(EMAIL_DELIVERED)/SUM(EMAIL_SENT)\n•\tWhen calculating email open rate (Email OR) calculate it as SUM(EMAIL_OPEN)/SUM(EMAIL_DELIVERED)\n•\tWhen calculating email click rate (Email CTR) calculate it as SUM(EMAIL_CLICK)/SUM(EMAIL_DELIVERED)\n•\tWhen calculating email click to open rate (Email CTOR) calculate it as SUM(EMAIL_CLICK)/SUM(EMAIL_OPEN)\n\n\nFor promotion related data:\n\n•\tWhen working with table CORTEX_ANALYST_PILOT_PROMOTIONS prioritize the column PROMO_CODES\nFor consumer or LAU related data:\n•\tWhen analyzing consumer profile of consumers in database always apply condition DIM_CONSUMER.IS_DELETED = 0\n•\tConsumer age refers to attribute CURRENT_AGE in DIM_CONSUMER\n\nGeneral:\n\n•\tDevice tenure refers to time since purchase of the device till the current date\n"

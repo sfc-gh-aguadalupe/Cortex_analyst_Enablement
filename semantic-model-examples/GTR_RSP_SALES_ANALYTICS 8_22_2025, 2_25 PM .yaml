@@ -1,0 +1,1071 @@
+name: GTR_RSP_SALES_ANALYTICS_SHARED
+description: Sales performance analytics combining transaction data, location data, and product data for business reporting across retail network
+tables:
+  - name: CORTX_DIM_POV
+    description: Location dimension with geographic data, operational status, and travel retail information
+    base_table:
+      database: DB_FDF_DEV
+      schema: INFORMATION_MART
+      table: CORTX_DIM_POV
+    primary_key:
+      columns:
+        - POV_ID
+    dimensions:
+      - name: DEPARTURE_ARRIVAL
+        synonyms:
+          - arrival_departure
+          - arrival_time
+          - departure_time
+          - flight_schedule
+          - travel_direction
+          - trip_type
+          - journey_type
+          - arrival_destination
+          - departure_destination
+        description: Travel retail flow direction indicator
+        expr: DEPARTURE_ARRIVAL
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - B
+          - D
+      - name: DF_MARKET_NAME
+        synonyms:
+          - market_name
+          - market_designation
+          - designated_market
+          - target_market
+          - geographic_market
+          - market_area
+        description: Market/country classification for regional analysis
+        expr: DF_MARKET_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Guinea Bissau
+          - Morocco
+          - Reunion
+      - name: IATA_CODE
+        synonyms:
+          - airport_code
+          - location_code
+          - airport_identifier
+          - aviation_code
+          - location_identifier
+        description: IATA airport code for travel retail location identification
+        expr: IATA_CODE
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - AAE
+          - COO
+          - GBE
+      - name: IS_REAL_POS
+        synonyms:
+          - actual_position
+          - real_position
+          - is_actual
+          - is_real
+          - is_valid_position
+          - valid_position
+          - position_status
+          - is_confirmed_position
+        description: Distinguishes actual retail locations from reference entries
+        expr: IS_REAL_POS
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - 'Y'
+          - 'N'
+      - name: KEY_ACCOUNT_GLOBAL_NAME
+        synonyms:
+          - global_key_account_name
+          - global_account_name
+          - key_account_global_identifier
+          - worldwide_account_name
+          - universal_key_account_name
+        description: Global account partnership classification
+        expr: KEY_ACCOUNT_GLOBAL_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - Dufry Global
+          - Heinemann Global
+      - name: KEY_ACCOUNT_NAME
+        synonyms:
+          - key_client_name
+          - primary_account_name
+          - main_account_name
+          - key_customer_name
+          - primary_client_name
+          - main_client_name
+        description: Key account identifier
+        expr: KEY_ACCOUNT_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - Gebr. Heinemann
+          - ATU
+          - Retail in Motion
+      - name: LOCATION_NAME
+        synonyms:
+          - site_name
+          - place_name
+          - facility_name
+          - venue_name
+          - geographic_location
+          - location_description
+          - point_of_sale
+          - store_name
+          - outlet_name
+        description: Geographic location name (city/area)
+        expr: LOCATION_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - Gaborone
+          - Yaounde
+          - Alexandria
+      - name: POV_ID
+        synonyms:
+          - point_of_view_id
+          - point_of_sale_id
+          - location_id
+          - site_id
+          - store_id
+          - outlet_id
+        description: Unique point of sale identifier
+        expr: POV_ID
+        data_type: NUMBER(38,0)
+        unique: true
+        sample_values:
+          - '5745'
+          - '5433'
+          - '12971'
+      - name: POV_NAME
+        synonyms:
+          - point_of_view_name
+          - point_of_view_description
+          - pov_description
+          - location_name
+          - point_of_view_label
+        description: Business name or operational identifier for the retail location
+        expr: POV_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - Air Algerie
+          - Annaba DF
+          - Heinemann- Setif
+      - name: STATUS_NAME
+        synonyms:
+          - state
+          - condition
+          - situation
+          - position
+          - designation
+          - label
+          - tag
+          - category
+          - classification
+        description: Current operational status of the location
+        expr: STATUS_NAME
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - Active
+          - Inactive
+      - name: TERMINAL_NAME
+        synonyms:
+          - terminal_code
+          - airport_terminal
+          - station_name
+          - stop_name
+          - depot_name
+          - facility_name
+        description: Airport terminal identification for duty-free operations
+        expr: TERMINAL_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Terminal 1
+          - Terminal 2B
+          - Terminal 2C
+      - name: TRADE_CHANNEL_NAME
+        synonyms:
+          - sales_channel
+          - distribution_channel
+          - marketing_channel
+          - trade_route
+          - sales_route
+          - distribution_route
+          - marketing_route
+          - channel_name
+          - trade_name
+        description: Primary distribution channel classification
+        expr: TRADE_CHANNEL_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Undefined
+          - Shipchandling
+          - Military
+      - name: VP_REGION_NAME
+        synonyms:
+          - vice_president_region
+          - regional_vp
+          - vp_area
+          - geographic_region
+          - regional_name
+          - vp_territory
+          - area_name
+          - regional_designation
+        description: regional grouping for reporting
+        expr: VP_REGION_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Japan and Korea
+          - China and SEA
+    facts:
+      - name: GEO_COORD_LATITUDE
+        synonyms:
+          - latitude
+          - lat
+          - geographic_latitude
+          - lat_coordinate
+          - latitude_coordinate
+          - y_coordinate
+        description: GPS latitude coordinate for spatial analysis and mapping
+        expr: GEO_COORD_LATITUDE
+        data_type: NUMBER(10,6)
+        access_modifier: public_access
+        sample_values:
+          - '36.752887'
+          - '36.926458'
+          - '36.752500'
+      - name: GEO_COORD_LONGITUDE
+        synonyms:
+          - longitude
+          - long
+          - easting
+          - east-west coordinate
+          - geographic longitude
+          - longitudinal coordinate
+        description: GPS longitude coordinate for spatial analysis and mapping
+        expr: GEO_COORD_LONGITUDE
+        data_type: NUMBER(10,6)
+        access_modifier: public_access
+        sample_values:
+          - '3.054630'
+          - '7.752535'
+          - '3.041970'
+  - name: CORTX_DIM_SELMA
+    description: Product master data with detailed attributes, NTD tracking, and market-specific availability
+    base_table:
+      database: DB_FDF_DEV
+      schema: INFORMATION_MART
+      table: CORTX_DIM_SELMA
+    primary_key:
+      columns:
+        - POV_ID
+        - PRODUCT_CATEGORY_CODE
+        - CR_BRAND_ID
+    dimensions:
+      - name: BRAND_FAMILY_CODE
+        synonyms:
+          - brand_group_id
+          - brand_category_code
+          - product_family_code
+          - brand_line_code
+          - brand_series_code
+        description: Brand family system code for portfolio management
+        expr: BRAND_FAMILY_CODE
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - CAM
+          - DUN
+          - DOUBH
+      - name: BRAND_FAMILY_NAME
+        synonyms:
+          - brand_name
+          - brand_group
+          - product_family
+          - brand_category
+          - brand_line
+        description: Brand family name for brand grouping
+        expr: BRAND_FAMILY_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - BENSON & HEDGES
+          - PHILIP MORRIS
+          - FAST
+      - name: CR_BRAND_ID
+        synonyms:
+          - brand_key
+          - brand_identifier
+          - brand_code
+          - brand_reference
+          - brand_unique_id
+        description: Unique product/SKU identifier
+        expr: CR_BRAND_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '104790'
+          - '123412'
+          - '99294'
+      - name: CR_BRAND_NAME
+        synonyms:
+          - brand_name
+          - company_name
+          - manufacturer_name
+          - product_brand
+          - brand_label
+          - brand_identifier
+        description: Complete product specification with all variant details
+        expr: CR_BRAND_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - MARLBORO - FILTER + EXTRA (FWD) KS RCB JUMBO RC WHITE - SOUTH ASIA DF
+          - WEST - SILVER KS BOX
+          - MARLBORO - GOLD (2.0 ORIGINAL) KS UBB 600 SPECIAL OUTER WHITE - ARGENTINA DF
+      - name: DF_MARKET_NAME
+        synonyms:
+          - market_name
+          - distribution_channel
+          - sales_region
+          - geographic_market
+          - territory_name
+          - market_area
+          - sales_area
+          - region_name
+        description: Market/country where product is available
+        expr: DF_MARKET_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Costa Rica
+          - El Salvador
+          - Finland DP
+      - name: FLAVOR
+        synonyms:
+          - taste
+          - variety
+          - seasoning
+          - aroma
+          - essence
+        description: Product flavor profile including innovation variants
+        expr: FLAVOR
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - NTD Caps w/o menthol
+          - Menthol
+          - NTD Caps w/menthol
+      - name: IS_NTD
+        synonyms:
+          - is_new_to_database
+          - new_to_database
+          - ntd_flag
+          - new_to_data
+          - first_time_in_database
+        description: NTD (flavors beyond tobacco, menthol, kretek) indicator
+        expr: IS_NTD
+        data_type: VARCHAR(10) COLLATE 'en-ci'
+        sample_values:
+          - '1'
+          - '0'
+      - name: LENGTH
+        synonyms:
+          - size
+          - dimension
+          - measurement
+          - extent
+          - span
+          - distance
+          - height
+          - width
+          - depth
+        description: Product length specification affecting smoking experience
+        expr: LENGTH
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - '100'
+          - KS
+          - LONGER THAN KS
+      - name: POV_ID
+        synonyms:
+          - perspective_id
+          - point_of_view_id
+          - point_of_view_identifier
+          - pov_identifier
+          - unique_perspective_id
+        description: Location where product is available (product-location matrix)
+        expr: POV_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '10902'
+          - '6833'
+          - '6838'
+      - name: PRICE_CLASS
+        synonyms:
+          - price_category
+          - price_tier
+          - price_level
+          - price_segment
+          - price_group
+          - cost_class
+          - value_class
+          - tiered_price
+        description: Price tier classification
+        expr: PRICE_CLASS
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - Low
+          - Below Premium
+          - Premium
+      - name: PRODUCT_CATEGORY_CODE
+        synonyms:
+          - product_group_id
+          - category_code
+          - product_class_code
+          - item_category_id
+          - product_type_code
+          - classification_code
+        description: Standardized product category code
+        expr: PRODUCT_CATEGORY_CODE
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - M0101
+          - F0101
+      - name: PRODUCT_CATEGORY_GROUP_NAME
+        synonyms:
+          - product_group
+          - category_group_name
+          - product_family
+          - product_segment
+          - product_classification
+          - product_type_group
+        description: High-level product portfolio grouping
+        expr: PRODUCT_CATEGORY_GROUP_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Tobacco Sticks
+      - name: PRODUCT_CATEGORY_NAME
+        synonyms:
+          - product_group_name
+          - category_name
+          - product_type
+          - product_classification
+          - product_segment
+          - product_family_name
+          - category_description
+        description: Product category name with innovation indicators
+        expr: PRODUCT_CATEGORY_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - RRP HTP Sticks
+          - Cigarettes
+      - name: TASTE
+        synonyms:
+          - flavor_profile
+          - flavor_type
+          - taste_type
+          - flavor_category
+          - taste_category
+          - flavor_description
+        description: Strength and taste characteristic classification
+        expr: TASTE
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Lights
+          - 1mg
+          - Ultralights
+      - name: THICKNESS
+        synonyms:
+          - width
+          - depth
+          - dimension
+          - measurement
+          - size
+          - gauge
+          - breadth
+        description: Product thickness/diameter specification
+        expr: THICKNESS
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - SSL
+          - STD
+          - SLI
+      - name: TRADE_CHANNEL_NAME
+        synonyms:
+          - sales_channel
+          - distribution_channel
+          - marketing_channel
+          - trade_name
+          - sales_route
+          - channel_name
+          - route_to_market
+          - go_to_market_channel
+        description: Distribution channel for product availability
+        expr: TRADE_CHANNEL_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Undefined
+          - Borders
+          - Shipchandling
+    facts:
+      - name: ITEM_PER_BUNDLE
+        synonyms:
+          - items_per_bundle
+          - bundle_quantity
+          - quantity_per_bundle
+          - bundle_size
+          - items_per_pack
+          - bundle_count
+          - pack_size
+          - quantity_per_pack
+        description: Package size for volume calculations
+        expr: ITEM_PER_BUNDLE
+        data_type: NUMBER(10,0)
+        access_modifier: public_access
+        sample_values:
+          - '200'
+          - '600'
+          - '400'
+  - name: CORTX_RSP_CALC
+    description: Transaction fact table with sales volume, pricing, and performance data with temporal and quality dimensions
+    base_table:
+      database: DB_FDF_DEV
+      schema: INFORMATION_MART
+      table: CORTX_RSP_CALC
+    primary_key:
+      columns:
+        - DATE
+        - POV_ID
+        - CR_BRAND_ID
+        - PRODUCT_CATEGORY_CODE
+    dimensions:
+      - name: BRAND_FAMILY_NAME
+        synonyms:
+          - brand_group
+          - product_line
+          - brand_category
+          - brand_series
+          - product_family
+        description: Brand family name for grouping products by brand
+        expr: BRAND_FAMILY_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - FLUM
+          - HUANGSHAN
+          - PANDA
+      - name: CR_BRAND_ID
+        synonyms:
+          - brand_key
+          - brand_identifier
+          - brand_code
+          - brand_reference
+          - brand_unique_id
+        description: Unique brand/SKU identifier linking to product master data
+        expr: CR_BRAND_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '141210'
+          - '144146'
+          - '90969'
+      - name: CR_BRAND_NAME
+        synonyms:
+          - brand_name
+          - brand_label
+          - product_brand
+          - company_name
+          - manufacturer_name
+          - brand_title
+        description: Complete product specification with variant, size, and market details
+        expr: CR_BRAND_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - RRP HTP Sticks TEREA - SIENNA UND SLIMS WHITE - 30-30% ENG HW EU DF
+          - PARLIAMENT - AQUA BLUE KS RCS JUMBO RC WHITE - GENERIC DF-ENG TXT
+          - RRP HTP Sticks TEREA - AMBER SLIMS WHITE - UAE DF
+      - name: DATA_QUALITY_DESC
+        synonyms:
+          - data_accuracy_note
+          - data_reliability_comment
+          - data_validation_description
+          - data_precision_note
+          - data_integrity_comment
+        description: Data reliability classification for analytical filtering
+        expr: DATA_QUALITY_DESC
+        data_type: VARCHAR(50) COLLATE 'en-ci'
+        sample_values:
+          - Real
+      - name: DF_MARKET_NAME
+        synonyms:
+          - market_name
+          - distribution_channel
+          - sales_region
+          - geographic_market
+          - territory_name
+          - market_area
+          - sales_territory
+          - region_name
+        description: Market or country classification for regional analysis
+        expr: DF_MARKET_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Morocco
+          - South Sudan
+          - France DP
+      - name: LOCATION_NAME
+        synonyms:
+          - site_name
+          - location
+          - place_name
+          - geographic_location
+          - area_name
+          - region_name
+          - site_description
+          - facility_name
+        description: Human-readable location name for geographic analysis
+        expr: LOCATION_NAME
+        data_type: VARCHAR(255) COLLATE 'en-ci'
+        sample_values:
+          - Gerona
+          - Ukraine/Romania
+          - Busan - Kimhae (downtown)
+      - name: POV_ID
+        synonyms:
+          - perspective_id
+          - point_of_view_id
+          - view_id
+          - id_perspective
+          - perspective_identifier
+        description: Point of Sale identifier linking to location dimension
+        expr: POV_ID
+        data_type: NUMBER(38,0)
+        unique: false
+        sample_values:
+          - '16260'
+          - '17580'
+          - '1455'
+      - name: PRODUCT_CATEGORY_CODE
+        synonyms:
+          - product_group_id
+          - category_code
+          - product_class_code
+          - product_type_id
+          - classification_code
+          - product_family_code
+        description: Standardized product category codes for system integration
+        expr: PRODUCT_CATEGORY_CODE
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - M0303
+          - M0410
+          - M0109
+      - name: PRODUCT_CATEGORY_NAME
+        synonyms:
+          - product_group
+          - category_name
+          - product_type
+          - product_classification
+          - product_segment
+          - product_family
+          - category_description
+        description: Product category classification including innovation products
+        expr: PRODUCT_CATEGORY_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - NCP Pods
+          - Nicotine Pouch (CAN)
+          - NCP eLiquid
+      - name: TMO_NAME
+        synonyms:
+          - third_party_name
+          - third_party_organization
+          - third_party_company
+          - trading_partner_name
+          - partner_name
+          - vendor_name
+          - supplier_name
+        description: TMO name for brand ownership tracking
+        expr: TMO_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - DR VAPES
+          - AIRBAR
+          - AIR
+      - name: TRADE_CHANNEL_NAME
+        synonyms:
+          - sales_channel
+          - distribution_channel
+          - marketing_channel
+          - retail_channel
+          - trade_route
+          - sales_route
+          - distribution_route
+          - marketing_route
+        description: Distribution channel classification for route-to-market analysis
+        expr: TRADE_CHANNEL_NAME
+        data_type: VARCHAR(100) COLLATE 'en-ci'
+        sample_values:
+          - Shipchandling
+          - Borders
+          - Diplomatic
+    facts:
+      - name: ITEMS_PER_BUNDLE
+        synonyms:
+          - bundle_size
+          - items_per_pack
+          - bundle_quantity
+          - pack_size
+          - quantity_per_bundle
+          - bundle_count
+          - items_per_package
+        description: Package size for volume standardization and pricing analysis
+        expr: ITEMS_PER_BUNDLE
+        data_type: NUMBER(10,0)
+        access_modifier: public_access
+        sample_values:
+          - '250'
+          - '5'
+          - '1'
+      - name: RSP_AMOUNT
+        synonyms:
+          - recommended_selling_price
+          - retail_price
+          - list_price
+          - sticker_price
+          - msrp
+          - selling_price
+        description: Price per unit in local currency (15% null rate requires handling)
+        expr: RSP_AMOUNT
+        data_type: NUMBER(18,6)
+        access_modifier: public_access
+        sample_values:
+          - '130.400000'
+          - '9.900000'
+          - '479.000000'
+      - name: STICK_EQUIVALENT_VOLUME
+        synonyms:
+          - equivalent_volume
+          - stick_volume
+          - volume_equivalent
+          - stick_equivalent
+          - unit_volume
+        description: Normalized volume in stick equivalents enabling cross-category comparison
+        expr: STICK_EQUIVALENT_VOLUME
+        data_type: NUMBER(18,6)
+        access_modifier: public_access
+        sample_values:
+          - '5600.000000'
+          - '83000.000000'
+          - '76800.000000'
+      - name: VOLUME
+        synonyms:
+          - amount
+          - quantity
+          - capacity
+          - bulk
+          - measure
+          - size
+          - magnitude
+        description: Sales volume in product-specific units (handles negative values for returns)
+        expr: VOLUME
+        data_type: NUMBER(18,6)
+        access_modifier: public_access
+        sample_values:
+          - '73.600000'
+          - '7.200000'
+          - '120.000000'
+    time_dimensions:
+      - name: DATE
+        synonyms:
+          - day
+          - calendar_date
+          - date_value
+          - calendar_day
+          - timestamp
+        description: Transaction date enabling daily sales analysis and trending
+        expr: DATE
+        data_type: DATE
+        unique: false
+        sample_values:
+          - '2024-08-01'
+          - '2024-12-01'
+          - '2024-11-01'
+      - name: MONTH_NUM
+        synonyms:
+          - month
+          - mo
+          - period
+          - monthly
+        description: Month number derived from transaction date
+        expr: MONTH(DATE)
+        data_type: NUMBER(2,0)
+      - name: QUARTER_NUM
+        synonyms:
+          - quarter
+          - qtr
+          - q
+          - quarterly
+        description: Quarter derived from transaction date
+        expr: QUARTER(DATE)
+        data_type: NUMBER(2,0)
+      - name: WEEK_NUM
+        synonyms:
+          - week
+          - wk
+          - weekly
+        description: Week number for weekly trend analysis
+        expr: WEEK(DATE)
+        data_type: NUMBER(2,0)
+      - name: YEAR_NUM
+        synonyms:
+          - year
+          - fiscal_year
+          - calendar_year
+          - annual_year
+          - reporting_year
+        description: Transaction year for annual reporting and YoY analysis
+        expr: YEAR_NUM
+        data_type: NUMBER(4,0)
+        sample_values:
+          - '2025'
+          - '2024'
+relationships:
+  - name: PRODUCT_TO_LOCATION
+    left_table: CORTX_DIM_SELMA
+    right_table: CORTX_DIM_POV
+    relationship_columns:
+      - left_column: POV_ID
+        right_column: POV_ID
+    relationship_type: many_to_one
+    join_type: left_outer
+  - name: SALES_TO_LOCATION
+    left_table: CORTX_RSP_CALC
+    right_table: CORTX_DIM_POV
+    relationship_columns:
+      - left_column: POV_ID
+        right_column: POV_ID
+    relationship_type: many_to_one
+    join_type: left_outer
+  - name: SALES_TO_PRODUCT
+    left_table: CORTX_RSP_CALC
+    right_table: CORTX_DIM_SELMA
+    relationship_columns:
+      - left_column: POV_ID
+        right_column: POV_ID
+      - left_column: CR_BRAND_ID
+        right_column: CR_BRAND_ID
+      - left_column: PRODUCT_CATEGORY_CODE
+        right_column: PRODUCT_CATEGORY_CODE
+    relationship_type: many_to_one
+    join_type: left_outer
+verified_queries:
+  - name: performance_dashboard
+    question: What is the overall business performance by region and product category?
+    sql: |
+      SELECT 
+        p.VP_REGION_NAME,
+        r.PRODUCT_CATEGORY_NAME,
+        SUM(r.VOLUME) as TOTAL_VOLUME,
+        SUM(CASE WHEN r.RSP_AMOUNT IS NOT NULL THEN r.VOLUME * r.RSP_AMOUNT ELSE 0 END) as TOTAL_REVENUE,
+        COUNT(DISTINCT r.POV_ID) as LOCATION_COUNT,
+        COUNT(DISTINCT r.CR_BRAND_ID) as PRODUCT_COUNT,
+        (SUM(CASE WHEN s.IS_NTD = 1 THEN r.VOLUME ELSE 0 END) / NULLIF(SUM(r.VOLUME), 0)) * 100 as INNOVATION_PENETRATION_PCT
+      FROM CORTX_RSP_CALC r
+      JOIN CORTX_DIM_POV p ON r.POV_ID = p.POV_ID
+      LEFT JOIN CORTX_DIM_SELMA s ON r.POV_ID = s.POV_ID AND r.CR_BRAND_ID = s.CR_BRAND_ID AND r.PRODUCT_CATEGORY_CODE = s.PRODUCT_CATEGORY_CODE
+      WHERE r.DATA_QUALITY_DESC IN ('Real', 'Draft')
+        AND p.STATUS_NAME = 'Active'
+      GROUP BY p.VP_REGION_NAME, r.PRODUCT_CATEGORY_NAME
+      ORDER BY TOTAL_REVENUE DESC
+    use_as_onboarding_question: true
+  - name: ntd_portfolio_tracking
+    question: How are our NTD products performing across markets?
+    sql: |
+      SELECT 
+        p.DF_MARKET_NAME,
+        s.BRAND_FAMILY_NAME,
+        CASE WHEN s.IS_NTD = 1 THEN 'NTD' ELSE 'Traditional' END as PRODUCT_TYPE,
+        COUNT(DISTINCT s.CR_BRAND_ID) as SKU_COUNT,
+        SUM(r.VOLUME) as TOTAL_VOLUME,
+        SUM(CASE WHEN r.RSP_AMOUNT IS NOT NULL THEN r.VOLUME * r.RSP_AMOUNT ELSE 0 END) as TOTAL_REVENUE,
+        AVG(r.RSP_AMOUNT) as AVG_PRICE,
+        (SUM(r.VOLUME) / SUM(SUM(r.VOLUME)) OVER (PARTITION BY p.DF_MARKET_NAME)) * 100 as MARKET_SHARE_PCT
+      FROM CORTX_RSP_CALC r
+      JOIN CORTX_DIM_POV p ON r.POV_ID = p.POV_ID
+      JOIN CORTX_DIM_SELMA s ON r.POV_ID = s.POV_ID AND r.CR_BRAND_ID = s.CR_BRAND_ID AND r.PRODUCT_CATEGORY_CODE = s.PRODUCT_CATEGORY_CODE
+      WHERE r.DATA_QUALITY_DESC IN ('Real', 'Draft')
+        AND p.STATUS_NAME = 'Active'
+      GROUP BY p.DF_MARKET_NAME, s.BRAND_FAMILY_NAME, s.IS_NTD
+      ORDER BY p.DF_MARKET_NAME, TOTAL_REVENUE DESC
+  - name: travel_retail_performance
+    question: Which airports and travel retail locations are top performers?
+    sql: |
+      SELECT 
+        p.IATA_CODE,
+        p.POV_NAME,
+        p.LOCATION_NAME,
+        p.DF_MARKET_NAME,
+        p.DEPARTURE_ARRIVAL,
+        SUM(r.VOLUME) as TOTAL_VOLUME,
+        SUM(CASE WHEN r.RSP_AMOUNT IS NOT NULL THEN r.VOLUME * r.RSP_AMOUNT ELSE 0 END) as TOTAL_REVENUE,
+        COUNT(DISTINCT r.CR_BRAND_ID) as PRODUCT_COUNT,
+        AVG(r.RSP_AMOUNT) as AVG_PRICE
+      FROM CORTX_RSP_CALC r
+      JOIN CORTX_DIM_POV p ON r.POV_ID = p.POV_ID
+      WHERE r.DATA_QUALITY_DESC IN ('Real', 'Draft')
+        AND p.IATA_CODE IS NOT NULL
+        AND p.STATUS_NAME = 'Active'
+      GROUP BY p.IATA_CODE, p.POV_NAME, p.LOCATION_NAME, p.DF_MARKET_NAME, p.DEPARTURE_ARRIVAL
+      ORDER BY TOTAL_REVENUE DESC
+      LIMIT 50
+  - name: tmo_competitive_analysis
+    question: What is the competitive landscape by TMO?
+    sql: |
+      WITH tmo_performance AS (
+        SELECT 
+          r.TMO_NAME,
+          SUM(r.VOLUME) as TOTAL_VOLUME,
+          SUM(CASE WHEN r.RSP_AMOUNT IS NOT NULL THEN r.VOLUME * r.RSP_AMOUNT ELSE 0 END) as TOTAL_REVENUE,
+          COUNT(DISTINCT r.CR_BRAND_ID) as BRAND_COUNT,
+          COUNT(DISTINCT r.POV_ID) as LOCATION_COUNT,
+          AVG(r.RSP_AMOUNT) as AVG_PRICE
+        FROM CORTX_RSP_CALC r
+        WHERE r.DATA_QUALITY_DESC IN ('Real', 'Draft')
+        GROUP BY r.TMO_NAME
+      )
+      SELECT 
+        TMO_NAME,
+        TOTAL_VOLUME,
+        TOTAL_REVENUE,
+        BRAND_COUNT,
+        LOCATION_COUNT,
+        AVG_PRICE,
+        (TOTAL_VOLUME / SUM(TOTAL_VOLUME) OVER ()) * 100 as VOLUME_MARKET_SHARE_PCT,
+        (TOTAL_REVENUE / SUM(TOTAL_REVENUE) OVER ()) * 100 as REVENUE_MARKET_SHARE_PCT
+      FROM tmo_performance
+      ORDER BY TOTAL_REVENUE DESC
+  - name: Show me the total sales for Italy over the entire available time period.
+    question: Show me the total sales for Italy over the entire available time period.
+    sql: |-
+      WITH sales_data AS (
+        SELECT
+          c.date,
+          c.volume,
+          c.rsp_amount
+        FROM
+          cortx_rsp_calc AS c
+          LEFT OUTER JOIN cortx_dim_pov AS p ON c.pov_id = p.pov_id
+        WHERE
+          c.data_quality_desc IN ('Real', 'Draft')
+          AND p.status_name = 'Active'
+          AND p.is_real_pos = 'Y'
+          AND p.df_market_name = 'Italy'
+      )
+      SELECT
+        MIN(date) AS start_date,
+        MAX(date) AS end_date,
+        SUM(
+          CASE
+            WHEN NOT rsp_amount IS NULL THEN volume * rsp_amount
+            ELSE 0
+          END
+        ) AS total_sales
+      FROM
+        sales_data
+    use_as_onboarding_question: false
+    verified_by: Andre El Khoury
+    verified_at: 1755866108
+  - name: show me total sales for marlboor
+    question: show me total sales for marlboor
+    sql: |-
+      WITH sales_data AS (
+        SELECT
+          c.date,
+          c.volume,
+          c.rsp_amount
+        FROM
+          cortx_rsp_calc AS c
+          LEFT OUTER JOIN cortx_dim_pov AS p ON c.pov_id = p.pov_id
+        WHERE
+          c.data_quality_desc IN ('Real', 'Draft')
+          AND p.status_name = 'Active'
+          AND p.is_real_pos = 'Y'
+          AND c.cr_brand_name LIKE '%MARLBORO%'
+      )
+      SELECT
+        MIN(date) AS start_date,
+        MAX(date) AS end_date,
+        SUM(
+          CASE
+            WHEN NOT rsp_amount IS NULL THEN volume * rsp_amount
+            ELSE 0
+          END
+        ) AS total_sales
+      FROM
+        sales_data
+    use_as_onboarding_question: false
+    verified_by: Andre El Khoury
+    verified_at: 1755866119
+custom_instructions: |-
+  PRODUCTION SQL GENERATION GUIDELINES:
+
+  DATA QUALITY AND FILTERING:
+  - Default filter: DATA_QUALITY_DESC IN ('Real', 'Draft') for operational analysis
+  - Use 'Simulated' data only for market sizing or competitive analysis
+  - Always filter to STATUS_NAME = 'Active' for current business performance
+  - Apply IS_REAL_POS = 'Y' filter when excluding reference locations
+
+  NULL VALUE HANDLING (CRITICAL):
+  - RSP_AMOUNT: 15% null rate - ALWAYS use CASE WHEN RSP_AMOUNT IS NOT NULL for revenue calculations
+  - CUSTOMER_ID: 100% null - DO NOT use in queries
+  - KEY_ACCOUNT_NAME: 81% null - use COALESCE or explicit null handling
+  - IATA_CODE: 53% null - only use when analyzing airport/travel retail
+  - Geographic coordinates: Use WHERE clauses to filter nulls for spatial analysis
+
+  REVENUE CALCULATIONS:
+  - Standard formula: CASE WHEN RSP_AMOUNT IS NOT NULL THEN VOLUME * RSP_AMOUNT ELSE 0 END
+  - Weighted average price: SUM(VOLUME * RSP_AMOUNT) / NULLIF(SUM(VOLUME WHERE RSP_AMOUNT IS NOT NULL), 0)
+  - Always handle division by zero with NULLIF
+
+  GEOGRAPHIC ANALYSIS:
+  - Use VP_REGION_NAME for regional reporting
+  - IATA_CODE identifies airport/travel retail locations
+  - DEPARTURE_ARRIVAL values: D=Departure, A=Arrival, B=Both
+
+  PREMIUM PRODUCT ANALYSIS:
+  - Premium products: PRICE_CLASS IN ('Premium', 'Above Premium')
+  - Calculate premium mix: Premium Volume / Total Volume * 100
+  - Use for portfolio analysis and margin analysis
+
+  TEMPORAL ANALYSIS:
+  - Data covers limited date range - verify DATE range before analysis
+  - Use MONTH(DATE), QUARTER(DATE) for derived time dimensions
+  - Apply LAG/LEAD window functions for period-over-period comparisons
+
+  BUSINESS TERMINOLOGY:
+  - POV = Point of Sale
+
+  JOIN PATTERNS:
+  - CORTX_RSP_CALC to CORTX_DIM_POV: ON POV_ID (location details)
+  - CORTX_RSP_CALC to CORTX_DIM_SELMA: ON POV_ID, CR_BRAND_ID, PRODUCT_CATEGORY_CODE (product attributes)
+  - Always use LEFT OUTER joins to preserve fact table records
+
+  PERFORMANCE OPTIMIZATION:
+  - Filter early in WHERE clause before joins
+  - Use appropriate aggregation levels before joining dimensions
+  - Consider LIMIT clauses for large result sets
+  - Group by meaningful business dimensions
+
+  FORMATTING AND PRESENTATION:
+  - Round financial amounts to 2 decimal places
+  - Round percentages to 1 decimal place
+  - Format large numbers with appropriate scaling (K, M, B)
+  - Use meaningful column aliases for business users
+
+  QUESTION CATEGORIZATION - ACCEPT:
+  - Sales performance and revenue analysis questions
+  - Geographic and market performance comparisons
+  - Product portfolio and innovation analysis
+  - Brand and TMO competitive analysis
+  - Travel retail and channel performance
+  - Data quality and operational metrics
+  - Time-based trends and growth analysis
+  - Premium product and pricing analysis
+
+  QUESTION CATEGORIZATION - REDIRECT:
+  - Individual customer personal data → aggregate performance metrics
