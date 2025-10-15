@@ -15,12 +15,10 @@ If you're new to Cortex Analyst, start with the [lab instructions](./handsonlab.
 - **[Monitoring](monitoring.md)** - Performance monitoring and observability guide
 
 ### Ready-to-Use templates
-- **[Semantic Model Examples](semantic-model-examples/)** - Complete YAML files for different industries
-  - E-commerce model
-  - Financial services model
-  - Healthcare model
-  - Manufacturing model
-  - SaaS business model
+- **[Semantic Model Examples](semantic-model-examples/)** - Complete YAML files from Pilot Markets
+  - CZ
+  - AT
+  - Duty Free
 
 ### Hands-On Lab
 - **[Festival Data Lab](./handsonlab.md)** - Interactive tutorial using music festival data
@@ -45,30 +43,9 @@ Our semantic model examples cover common business scenarios:
 
 | Industry | Use Case | Key Features |
 |----------|----------|--------------|
-| **E-commerce** | Sales & inventory analytics | Customer segmentation, product performance |
-| **Financial Services** | Banking & transaction analysis | Risk management, regulatory reporting |
-| **Healthcare** | Patient & provider analytics | HIPAA compliance, outcome tracking |
-| **Manufacturing** | Supply chain & production | Quality metrics, supplier performance |
-| **SaaS** | Subscription & usage analytics | Churn prediction, feature adoption |
-
-Each example includes:
-- Complete YAML semantic model
-- Sample business questions
-- Verified query examples
-- Integration patterns
-
-## 🛠️ Getting Started Paths
-
-### For Analysts & Business Users
-1. Complete the [Festival Data Lab](./handsonlab.md)
-
-
-### For Data Engineers
-1. Study [Semantic Model Examples](semantic-model-examples/) for your domain
-3. Follow [Best Practices](best-practices.md) for enterprise deployment
-
-### For Administrators
-1. Set up [Administrator Monitoring](monitoring.md) and performance tracking
+| **Austria** | Sales & inventory analytics | Customer segmentation, product performance |
+| **Czech Republic** | Banking & transaction analysis | Risk management, regulatory reporting |
+| **Duty Free** | Patient & provider analytics | HIPAA compliance, outcome tracking |
 
 
 ## 📈 Success Metrics
