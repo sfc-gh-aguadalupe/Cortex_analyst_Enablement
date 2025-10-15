@@ -44,8 +44,8 @@ Our semantic model examples cover common business scenarios:
 | Pilot Market | Use Case 
 |----------|----------|
 | **Austria** | Sales & inventory analytics 
-| **Czech Republic** | Banking & transaction analysis 
-| **Duty Free** | Patient & provider analytics 
+| **Czech Republic** | Consumer Interactions 
+| **Duty Free** | B2C and budget tables
 
 
 ## 📈 Success Metrics
