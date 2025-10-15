@@ -104,22 +104,12 @@ For advanced analysis, you can query the raw event data in the `SNOWFLAKE.LOCAL.
 - Monitor for unusual query patterns
 - Set up notifications for performance degradation
 
-### Data Retention
-- Understand your organization's data retention policies
-- Archive historical monitoring data as needed
-- Consider data privacy requirements
-
 ## Troubleshooting Common Issues
 
 ### Access Denied Errors
 - Verify user has required privileges
 - Check semantic model/view ownership
 - Ensure proper role assignments
-
-### Missing Data
-- Remember the 1-2 minute lag for new requests
-- Verify the semantic model/view name is correct
-- Check if queries were made using inline YAML (not accessible via table function)
 
 ### Performance Issues
 - Review generated SQL for optimization opportunities
@@ -138,13 +128,6 @@ For advanced analysis, you can query the raw event data in the `SNOWFLAKE.LOCAL.
 - Set up custom alerting rules
 - Integrate with enterprise monitoring platforms
 
-## Next Steps
-
-1. **Set up monitoring** for your semantic models
-2. **Review logs regularly** to identify improvement opportunities
-3. **Create dashboards** to track key metrics
-4. **Establish alerting** for critical issues
-5. **Use insights** to continuously improve your semantic models
 
 ---
 
