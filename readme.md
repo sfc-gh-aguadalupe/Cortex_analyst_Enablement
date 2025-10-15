@@ -41,11 +41,11 @@ If you're new to Cortex Analyst, start with the [lab instructions](./handsonlab.
 
 Our semantic model examples cover common business scenarios:
 
-| Industry | Use Case | Key Features |
-|----------|----------|--------------|
-| **Austria** | Sales & inventory analytics | Customer segmentation, product performance |
-| **Czech Republic** | Banking & transaction analysis | Risk management, regulatory reporting |
-| **Duty Free** | Patient & provider analytics | HIPAA compliance, outcome tracking |
+| Pilot Market | Use Case 
+|----------|----------|
+| **Austria** | Sales & inventory analytics 
+| **Czech Republic** | Banking & transaction analysis 
+| **Duty Free** | Patient & provider analytics 
 
 
 ## 📈 Success Metrics
