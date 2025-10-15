@@ -300,12 +300,6 @@ Development → Testing → Review → Deployment → Monitoring → Iteration
 - User training and support
 - Business logic validation
 
-**Data Governance Team:**
-- Access control and security policies
-- Data quality standards
-- Compliance and audit requirements
-- Model approval workflows
-
 **End Users:**
 - Feedback on model accuracy and usability
 - New business question identification
